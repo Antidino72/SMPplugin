@@ -17,7 +17,6 @@ public class SlotManager {
     public ItemStack initializeSlots(ItemStack item){
 
         if(item == null) {
-            Bukkit.getLogger().warning("[SMPplugin] Item is null");
             return null;
         };
         Material material = item.getType();

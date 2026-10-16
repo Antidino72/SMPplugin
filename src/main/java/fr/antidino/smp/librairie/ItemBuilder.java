@@ -36,6 +36,14 @@ public class ItemBuilder {
         }
         return this;
     }
+    public ItemBuilder setName(Component name) {
+        ItemMeta meta = this.item.getItemMeta();
+        if (meta != null) {
+            meta.displayName(name);
+            this.item.setItemMeta(meta);
+        }
+        return this;
+    }
 
     public ItemBuilder setLore(List<Component> lore) {
         ItemMeta meta = this.item.getItemMeta();

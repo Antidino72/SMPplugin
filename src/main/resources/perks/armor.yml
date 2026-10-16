@@ -1,0 +1,18 @@
+item:
+  material : REDSTONE
+  display_name : "<red>Health Boost<red>"
+craft :
+  shape :
+    - XXX
+    - CCC
+    - XXX
+  ingredient :
+    X : DIAMOND_BLOCK
+    C : APPLE
+
+attribute:
+  1 :
+    type: "GENERIC_MAX_HEALTH"
+    amount: 4.0
+    operation: "ADD_NUMBER"
+    slot-group: "ARMOR"

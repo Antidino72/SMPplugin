@@ -32,19 +32,26 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
         switch (args[0]) {
             case "reload": {
                 plugin.reloadConfig();
+                plugin.initConfig();
                 player.sendMessage(Component.text("Config reloaded!"));
                 break;
             }
             case "give" : {
                 AbstractPerk perk = plugin.perkManager.getPerk(args[1]);
                 if (perk == null) return false;
-
-                int count = Integer.parseInt(args[2]);
-                for (int i = 0; i < count; i++) {
+                if (args.length == 2) {
                     player.getInventory().addItem(perk.getItem());
-                }
+                    break;
+                }else if (args.length == 3) {
+                    int count = Integer.parseInt(args[2]);
 
-                break;
+                    for (int i = 0; i < count; i++) {
+                        player.getInventory().addItem(perk.getItem());
+                    }
+
+                    break;
+
+                }
             }
         }
         return true;

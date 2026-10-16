@@ -73,11 +73,6 @@ public class PDCBuilder {
         return used < max;
     }
 
-    public ItemStack addSlot(ItemStack item) {
-
-
-        return item;
-    }
 
     public ArrayList<String> getAppliedPerks(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return new ArrayList<>();
