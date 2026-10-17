@@ -1,14 +1,15 @@
+id : "armor"
 item:
-  material : REDSTONE
-  display_name : "<red>Health Boost<red>"
+  material : GOLD_INGOT
+  display_name : "<gray>Armor Boost<gray>"
 craft :
   shape :
-    - XXX
-    - CCC
-    - XXX
+    - "XXX"
+    - "XCC"
+    - "XXX"
   ingredient :
     X : DIAMOND_BLOCK
-    C : APPLE
+    C : DIAMOND_CHESTPLATE
 
 attribute:
   1 :

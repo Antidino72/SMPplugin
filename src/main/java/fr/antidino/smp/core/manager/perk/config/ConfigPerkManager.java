@@ -12,6 +12,7 @@ public class ConfigPerkManager {
 
     public FileConfiguration healthConfig;
     public FileConfiguration ArmorConfig;
+    public FileConfiguration SpeedConfig;
 
     public ConfigPerkManager(CorePlugin plugin) {
 
@@ -23,13 +24,17 @@ public class ConfigPerkManager {
 
         plugin.saveResource("perks/health.yml", false);
         plugin.saveResource("perks/armor.yml", false);
+        plugin.saveResource("perks/speed.yml", false);
 
         healthConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder()+"/perks/health.yml"));
         ArmorConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder()+"/perks/armor.yml"));
+        SpeedConfig =  YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder()+"/perks/speed.yml"));
+
 
     }
     public void ReloadConfig(){
         healthConfig = YamlConfiguration.loadConfiguration(new File("perks/health.yml"));
+        SpeedConfig = YamlConfiguration.loadConfiguration(new File("perks/speed.yml"));
         ArmorConfig = YamlConfiguration.loadConfiguration(new File("perks/armor.yml"));
     }
 }

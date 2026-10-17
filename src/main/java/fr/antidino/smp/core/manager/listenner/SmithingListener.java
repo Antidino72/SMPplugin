@@ -3,6 +3,7 @@ package fr.antidino.smp.core.manager.listenner;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.SlotManager;
+import fr.antidino.smp.core.manager.perk.AbstractPerk;
 import fr.antidino.smp.librairie.ItemBuilder;
 import fr.antidino.smp.librairie.PDCBuilder;
 import org.bukkit.Bukkit;
@@ -27,20 +28,10 @@ public class SmithingListener implements Listener {
         ItemStack equip = event.getInventory().getInputEquipment();
         ItemStack mineral = event.getInventory().getInputMineral();
         if (!(plugin.pdcBuilder.hasEmptySlot(equip))) return;
-
-        switch (mineral.getItemMeta().getPersistentDataContainer().get(PDCBuilder.PERK_ID, PersistentDataType.STRING)) {
-            case null -> {}
-            case "health_perk" -> {
-                apply_perk(event,equip,"health_perk");
-                break;
-            }
-            case "armor_perk" -> {
-                apply_perk(event,equip,"armor_perk");
-                break;
-            }
-            default ->
-                throw new IllegalStateException("Unexpected value: " + mineral.getItemMeta().getPersistentDataContainer().get(PDCBuilder.PERK_ID, PersistentDataType.STRING));
-            }
+        String perk_id = mineral.getItemMeta().getPersistentDataContainer().get(PDCBuilder.PERK_ID, PersistentDataType.STRING);
+        AbstractPerk perk = plugin.perkManager.getPerk(perk_id);
+        if (perk == null) return;
+        apply_perk(event,equip,perk_id);
     }
     private void apply_perk(PrepareSmithingEvent event,ItemStack equip ,String perk_id){
         ItemStack resultItem = equip.clone();

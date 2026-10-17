@@ -1,0 +1,19 @@
+id : "speed"
+item:
+  material : "LAPIS_LAZULI"
+  display_name : "<aqua>Speed Boost"
+craft :
+  shape :
+    - "XCX"
+    - "CBC"
+    - "XCX"
+  ingredient :
+    X: "DIAMOND_BLOCK"
+    C: "GLOWSTONE_DUST"
+    B: "DIAMOND_BOOTS"
+attribute:
+  1 :
+    type: "GENERIC_MAX_HEALTH"
+    amount: 4.0
+    operation: "ADD_NUMBER"
+    slot-group: "ARMOR"

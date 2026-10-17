@@ -1,6 +1,7 @@
 package fr.antidino.smp.core.manager.perk;
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.librairie.ItemBuilder;
+import fr.antidino.smp.librairie.PDCBuilder;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -68,7 +69,7 @@ public abstract class AbstractPerk {
             Bukkit.getLogger().warning(configuration.getString("item.display_name"));
             return getNotFoundItem();
         }
-        return new ItemBuilder(material,plugin).setName(MiniMessage.miniMessage().deserialize("<!italic>"+displayName)).build();
+        return new ItemBuilder(material,plugin).addPDC(PDCBuilder.PERK_ID,getId()).setName(MiniMessage.miniMessage().deserialize("<!italic>"+displayName)).build();
     }
     private ItemStack getNotFoundItem(){
         return new ItemBuilder(Material.BARRIER,plugin).setName(MiniMessage.miniMessage().deserialize("<red>NOT FOUND<red>")).build();
@@ -82,9 +83,11 @@ public abstract class AbstractPerk {
     }
 
     public void registerCraft(FileConfiguration config) {
+        if (Bukkit.getRecipe(key) != null) {
+            Bukkit.removeRecipe(key);
+        }
         ItemStack item = loadItem(config);
-        log.info("registering craft for item "+item.toString());
-        NamespacedKey key = new NamespacedKey(plugin, "perk_" + config.getString("id", "custom"));
+
 
         ShapedRecipe recipe = new ShapedRecipe(key, item);
 
@@ -99,7 +102,6 @@ public abstract class AbstractPerk {
         ConfigurationSection ingredientsSec = config.getConfigurationSection("craft.ingredient");
         if (ingredientsSec != null) {
             for (String keyChar : ingredientsSec.getKeys(false)) {
-                log.info(keyChar);
                 if (keyChar.isEmpty()) continue;
                 char c = keyChar.charAt(0);
 
@@ -118,9 +120,6 @@ public abstract class AbstractPerk {
         }else {
             log.info("craft ingredient section is empty");
         }
-        log.info("registering craft for item "+recipe.getShape()[0]);
-        log.info("registering craft for item "+recipe.getShape()[1]);
-        log.info("registering craft for item "+recipe.getShape()[2]);
         if (Bukkit.getRecipe(key) == null) {
             Bukkit.addRecipe(recipe);
         }

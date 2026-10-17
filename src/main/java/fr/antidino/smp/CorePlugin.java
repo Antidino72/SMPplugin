@@ -4,6 +4,7 @@ import fr.antidino.smp.core.manager.SlotManager;
 import fr.antidino.smp.core.manager.commands.AdminCommands;
 import fr.antidino.smp.core.manager.listenner.CraftingListener;
 import fr.antidino.smp.core.manager.listenner.ItemBreakListener;
+import fr.antidino.smp.core.manager.listenner.PlayerJoinListener;
 import fr.antidino.smp.core.manager.listenner.SmithingListener;
 import fr.antidino.smp.core.SmithingRegisterAllItem;
 import fr.antidino.smp.core.manager.perk.config.ConfigPerkManager;
@@ -32,8 +33,10 @@ public final class CorePlugin extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new SmithingListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemBreakListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
 
 
+        pdcBuilder = new PDCBuilder(this);
 
         PDCBuilder.init(this);
         perkManager = new PerkManager(this);
@@ -41,13 +44,7 @@ public final class CorePlugin extends JavaPlugin {
         new SmithingRegisterAllItem(this);
         CraftingListener craftingListenner = new CraftingListener(this);
         getCommand("perk").setExecutor(new AdminCommands(this));
-        NamespacedKey key = new NamespacedKey(this, "perk_health");
-        Recipe recipe = Bukkit.getRecipe(key);
-        if (recipe != null) {
-            this.getLogger().info("La recette " + "perk_health" + " est bien enregistrée !");
-        } else {
-            this.getLogger().warning("La recette " + "perk_health" + " N'EST PAS enregistrée !");
-        }
+
 
 
 
