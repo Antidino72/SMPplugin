@@ -1,7 +1,10 @@
 package fr.antidino.smp;
 
 import fr.antidino.smp.core.manager.SlotManager;
+import fr.antidino.smp.core.manager.codex.CodexListener;
+import fr.antidino.smp.core.manager.codex.CodexMenu;
 import fr.antidino.smp.core.manager.commands.AdminCommands;
+import fr.antidino.smp.core.manager.commands.PerksCommand;
 import fr.antidino.smp.core.manager.database.DatabaseManager;
 import fr.antidino.smp.core.manager.database.DatabaseProvider;
 import fr.antidino.smp.core.manager.listenner.CraftingListener;
@@ -25,6 +28,7 @@ public final class CorePlugin extends JavaPlugin {
     public PerkManager perkManager;
     public SlotManager slotManager;
     public ConfigPerkManager configPerkManager;
+    public CodexMenu codexMenu;
 
     private DatabaseManager databaseManager;
     public DatabaseProvider databaseProvider;
@@ -45,6 +49,12 @@ public final class CorePlugin extends JavaPlugin {
         slotManager = new SlotManager(this);
         new SmithingRegisterAllItem(this);
         getCommand("perk").setExecutor(new AdminCommands(this));
+
+        codexMenu = new CodexMenu(this);
+        getServer().getPluginManager().registerEvents(new CodexListener(this), this);
+        PerksCommand perksCommand = new PerksCommand(this);
+        getCommand("perks").setExecutor(perksCommand);
+        getCommand("perks").setTabCompleter(perksCommand);
 
         databaseManager = new DatabaseManager(this);
         databaseManager.initDatabase();
