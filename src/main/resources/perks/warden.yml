@@ -1,0 +1,21 @@
+id : "warden"
+item:
+  material : "ECHO_SHARD"
+  display_name : "<aqua>Warden Boost"
+craft :
+  shape :
+    - "XSX"
+    - "DED"
+    - "XCX"
+  ingredient :
+    S : "SCULK_SHRIEKER"
+    E : "ECHO_SHARD"
+    X: "SCULK"
+    C: "SCULK_CATALYST"
+    D: "DIAMOND_BLOCKS"
+attribute:
+  1 :
+    type: "GENERIC_MAX_HEALTH"
+    amount: 4.0
+    operation: "ADD_NUMBER"
+    slot-group: "ARMOR"

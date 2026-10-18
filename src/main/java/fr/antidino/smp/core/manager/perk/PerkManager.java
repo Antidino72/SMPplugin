@@ -39,10 +39,23 @@ public class PerkManager {
         registerPerk(new AttackSpeedPerk(PerkTypeId.ATTACK_SPEED,plugin,configPerkManager.AttackSpeedConfig));
         registerPerk(new AttackDamagePerk(PerkTypeId.ATTACK_DAMAGE,plugin,configPerkManager.AttackDamageConfig));
         registerPerk(new NoFallPerk(PerkTypeId.NO_FALL_PERK,plugin,configPerkManager.NoFallConfig));
+        registerPerk(new WardenPerk(PerkTypeId.WARDEN_PERK,plugin,configPerkManager.WardenConfig));
     }
 
     public void registerPerk(AbstractPerk perk) {
         registeredPerks.put(perk.getId(), perk);
+    }
+
+    public String getPerkId(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) {
+            return null;
+        }
+        ItemMeta meta = item.getItemMeta();
+        NamespacedKey key = PDCBuilder.PERK_ID;
+        if (meta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
+            return meta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
+        }
+        return null;
     }
 
     public AbstractPerk getPerk(String id) {

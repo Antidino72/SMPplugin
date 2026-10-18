@@ -12,11 +12,13 @@ public class SmithingRegisterAllItem {
     public  SmithingRegisterAllItem(Plugin plugin) {
         NamespacedKey key = new NamespacedKey(plugin, "custom_all_armor_smithing");
 
+        ArrayList<Material> items = new ArrayList<>();
+        items.add(Material.ECHO_SHARD);
 
 
         RecipeChoice base = new RecipeChoice.MaterialChoice(getAllMaterials());
 
-        RecipeChoice addition = new RecipeChoice.MaterialChoice(Material.BARRIER);
+        RecipeChoice addition = new RecipeChoice.MaterialChoice(Material.ECHO_SHARD);
 
 
 
@@ -24,8 +26,8 @@ public class SmithingRegisterAllItem {
         SmithingRecipe recipe = new SmithingTransformRecipe(key, result, addition, base, addition);
         plugin.getServer().addRecipe(recipe);
     }
-    public static List<Material> getAllMaterials(){
-        List<Material> allArmorsList = new ArrayList<>();
+    public static ArrayList<Material> getAllMaterials(){
+        ArrayList<Material> allArmorsList = new ArrayList<>();
         for (Material mat : Material.values()) {
             if (mat.isItem()) {
                 String name = mat.name();

@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AdminCommands implements CommandExecutor, TabCompleter {
     private CorePlugin plugin;
@@ -69,16 +70,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
             });
         }
         if (args.length == 3 && args[0].equals("give")) {
-            completions.add("01");
-            completions.add("02");
-            completions.add("03");
-            completions.add("04");
-            completions.add("05");
-            completions.add("10");
-            completions.add("20");
-            completions.add("30");
-            completions.add("40");
-            completions.add("50");
+            completions.addAll(List.of("01", "02", "04","08","16","32","64"));
         }
         return completions;
     }

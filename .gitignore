@@ -1,9 +1,7 @@
 #git diff output
 diff.txt
 
-#database with table for dev
-/src/main/resources/database.db
-
+copyjar.js
 # User-specific stuff
 .idea/
 

@@ -36,11 +36,11 @@ public final class CorePlugin extends JavaPlugin {
         configPerkManager = new ConfigPerkManager(this);
         initConfig();
 
-
+        getServer().getPluginManager().registerEvents(new CraftingListener(this), this);
         getServer().getPluginManager().registerEvents(new SmithingListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
-
+        new CraftingListener(this);
 
         pdcBuilder = new PDCBuilder(this);
 
@@ -48,7 +48,6 @@ public final class CorePlugin extends JavaPlugin {
         perkManager = new PerkManager(this);
         slotManager = new SlotManager(this);
         new SmithingRegisterAllItem(this);
-        CraftingListener craftingListenner = new CraftingListener(this);
         getCommand("perk").setExecutor(new AdminCommands(this));
 
         databaseManager = new DatabaseManager(this);

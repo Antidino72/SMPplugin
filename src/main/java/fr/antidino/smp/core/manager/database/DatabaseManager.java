@@ -61,10 +61,10 @@ public class DatabaseManager {
 
         String perksTable = """
                 CREATE TABLE IF NOT EXISTS smp_player_perks (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     uuid VARCHAR(36),
                     perk_id VARCHAR(64),
-                    created_at DATETIME,
-                    PRIMARY KEY (uuid, perk_id)
+                    created_at DATETIME
                 );
         """;
 

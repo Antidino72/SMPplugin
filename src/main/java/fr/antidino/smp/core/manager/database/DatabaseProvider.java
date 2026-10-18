@@ -15,7 +15,7 @@ public class DatabaseProvider {
             SELECT * FROM smp_players WHERE uuid=?
     """;
     private static final String INSERT_PERK_CRAFT_SQL = """
-        INSERT INTO smp_players_perks (uuid, perk_id, created_at) ;
+        INSERT INTO smp_player_perks (uuid, perk_id, created_at) VALUES (?, ?, ?);
     """;
     public DatabaseProvider(CorePlugin plugin) {
         this.plugin = plugin;
@@ -45,7 +45,7 @@ public class DatabaseProvider {
 
     public void InsertPerkCraftSQL(String perk_id,String uuid){
         try (Connection conn = plugin.getConnexion();
-             PreparedStatement ps = conn.prepareStatement(INSERT_PLAYER_SQL)) {
+             PreparedStatement ps = conn.prepareStatement(INSERT_PERK_CRAFT_SQL)) {
             ps.setString(1, uuid);
             ps.setString(2, perk_id);
             ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));

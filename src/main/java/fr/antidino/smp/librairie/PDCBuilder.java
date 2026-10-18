@@ -38,12 +38,10 @@ public class PDCBuilder {
     }
     public ItemStack initializeSlots(ItemStack item) {
         if (item == null || item.getType().isAir()) {
-            Bukkit.getLogger().warning("Item is null or empty");
             return item;
         }
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
-            Bukkit.getLogger().warning("Item meta is null");
             return item;
         }
         PersistentDataContainer pdc = meta.getPersistentDataContainer();
