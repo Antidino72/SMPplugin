@@ -1,6 +1,9 @@
 #git diff output
 diff.txt
 
+#database with table for dev
+/src/main/resources/database.db
+
 # User-specific stuff
 .idea/
 

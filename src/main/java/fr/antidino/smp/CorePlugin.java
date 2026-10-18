@@ -2,6 +2,8 @@ package fr.antidino.smp;
 
 import fr.antidino.smp.core.manager.SlotManager;
 import fr.antidino.smp.core.manager.commands.AdminCommands;
+import fr.antidino.smp.core.manager.database.DatabaseManager;
+import fr.antidino.smp.core.manager.database.DatabaseProvider;
 import fr.antidino.smp.core.manager.listenner.CraftingListener;
 import fr.antidino.smp.core.manager.listenner.ItemBreakListener;
 import fr.antidino.smp.core.manager.listenner.PlayerJoinListener;
@@ -17,6 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 public final class CorePlugin extends JavaPlugin {
     private static final Logger log = LoggerFactory.getLogger(CorePlugin.class);
     public PDCBuilder pdcBuilder;
@@ -24,7 +29,8 @@ public final class CorePlugin extends JavaPlugin {
     public SlotManager slotManager;
     public ConfigPerkManager configPerkManager;
 
-
+    private DatabaseManager databaseManager;
+    public DatabaseProvider databaseProvider;
     @Override
     public void onEnable() {
         configPerkManager = new ConfigPerkManager(this);
@@ -45,6 +51,9 @@ public final class CorePlugin extends JavaPlugin {
         CraftingListener craftingListenner = new CraftingListener(this);
         getCommand("perk").setExecutor(new AdminCommands(this));
 
+        databaseManager = new DatabaseManager(this);
+        databaseManager.initDatabase();
+        databaseProvider = new DatabaseProvider(this);
 
 
 
@@ -54,8 +63,9 @@ public final class CorePlugin extends JavaPlugin {
         this.saveDefaultConfig();
         this.reloadConfig();
         configPerkManager.LoadConfigAtStart();
-
-
+    }
+    public Connection getConnexion() throws SQLException {
+        return databaseManager.getConnection();
     }
     public void reloadAllConfig() {
         this.reloadConfig();
@@ -63,6 +73,8 @@ public final class CorePlugin extends JavaPlugin {
     }
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        if (databaseManager != null) {
+            databaseManager.close();
+        }
     }
 }

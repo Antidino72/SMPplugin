@@ -2,7 +2,9 @@ package fr.antidino.smp.core.manager.perk;
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.librairie.ItemBuilder;
 import fr.antidino.smp.librairie.PDCBuilder;
+
 import net.kyori.adventure.text.minimessage.MiniMessage;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -12,11 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
-import org.eclipse.sisu.inject.Logs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractPerk {
@@ -54,10 +54,10 @@ public abstract class AbstractPerk {
     public NamespacedKey getKey() {
         return key;
     }
-
     /*
             Fonction utilitaire pour Charger les infos
      */
+
     private String loadName(FileConfiguration config) {
         return config.getString("item.display_name","<red>Display name");
     }
@@ -139,4 +139,7 @@ public abstract class AbstractPerk {
 
     public abstract ItemStack onApply(ItemStack item);
     public abstract void onRemove(Player player, ItemStack item);
+
+
+
 }

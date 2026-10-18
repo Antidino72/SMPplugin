@@ -1,0 +1,20 @@
+id : "no_fall"
+item:
+  material : REDSTONE
+  display_name : "<red>NoFall Perk<red>"
+craft :
+  shape :
+    - "XXX"
+    - "BCB"
+    - "XXX"
+  ingredient :
+    X : DIAMOND_BLOCK
+    C : PHANTOM_MEMBRANE
+    B : SHULKER_SHELL
+
+attribute:
+  1 :
+    type: "GENERIC_MAX_HEALTH"
+    amount: 4.0
+    operation: "ADD_NUMBER"
+    slot-group: "ARMOR"

@@ -12,23 +12,22 @@ import java.util.List;
 
 public class ConfigPerkManager {
     CorePlugin plugin;
-    public ConfigPerkLoader configPerkLoader;
 
     public FileConfiguration healthConfig;
     public FileConfiguration ArmorConfig;
     public FileConfiguration SpeedConfig;
     public FileConfiguration AttackSpeedConfig;
     public FileConfiguration AttackDamageConfig;
+    public FileConfiguration NoFallConfig;
 
     public ConfigPerkManager(CorePlugin plugin) {
 
         this.plugin = plugin;
-        configPerkLoader = new ConfigPerkLoader(plugin);
         LoadConfigAtStart();
     }
     public void LoadConfigAtStart(){
 
-        List<String> immutableList = List.of("health.yml", "attack_damage.yml", "speed.yml", "armor.yml","attack_speed.yml");
+        List<String> immutableList = List.of("health.yml", "attack_damage.yml", "speed.yml", "armor.yml","attack_speed.yml","nofall.yml");
         immutableList.forEach(this::generateFile);
         ReloadConfig();
 
@@ -40,11 +39,15 @@ public class ConfigPerkManager {
         SpeedConfig = YamlConfiguration.loadConfiguration(getConfigFile("speed.yml"));
         AttackSpeedConfig = YamlConfiguration.loadConfiguration(getConfigFile("attack_speed.yml"));
         ArmorConfig = YamlConfiguration.loadConfiguration(getConfigFile("armor.yml"));
+        NoFallConfig = YamlConfiguration.loadConfiguration(getConfigFile("nofall.yml"));
     }
     private File getConfigFile(String name){
         return new File(plugin.getDataFolder()+"/perks/"+name);
     }
     private void generateFile(String name){
-        plugin.saveResource("perks/"+name, false);
+        File file = new File(plugin.getDataFolder()+"/perks/"+name);
+        if(!file.exists()){
+            plugin.saveResource("perks/"+name, false);
+        }
     }
 }
