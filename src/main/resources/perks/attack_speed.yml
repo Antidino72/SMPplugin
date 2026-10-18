@@ -1,0 +1,19 @@
+id : "attack_speed"
+item:
+  material : "AMETHYST_SHARD"
+  display_name : "<red>Attack Speed Boost"
+craft :
+  shape :
+    - "XCX"
+    - "CBC"
+    - "XCX"
+  ingredient :
+    X: "DIAMOND_BLOCK"
+    C: "ANCIENT_DEBRIS"
+    B: "DIAMOND_SWORD"
+attribute:
+  1 :
+    type: "GENERIC_MAX_HEALTH"
+    amount: 4.0
+    operation: "ADD_NUMBER"
+    slot-group: "ARMOR"

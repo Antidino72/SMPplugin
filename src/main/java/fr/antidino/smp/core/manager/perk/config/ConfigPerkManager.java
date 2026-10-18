@@ -6,6 +6,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ConfigPerkManager {
     CorePlugin plugin;
     public ConfigPerkLoader configPerkLoader;
@@ -13,6 +17,8 @@ public class ConfigPerkManager {
     public FileConfiguration healthConfig;
     public FileConfiguration ArmorConfig;
     public FileConfiguration SpeedConfig;
+    public FileConfiguration AttackSpeedConfig;
+    public FileConfiguration AttackDamageConfig;
 
     public ConfigPerkManager(CorePlugin plugin) {
 
@@ -22,19 +28,23 @@ public class ConfigPerkManager {
     }
     public void LoadConfigAtStart(){
 
-        plugin.saveResource("perks/health.yml", false);
-        plugin.saveResource("perks/armor.yml", false);
-        plugin.saveResource("perks/speed.yml", false);
-
-        healthConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder()+"/perks/health.yml"));
-        ArmorConfig = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder()+"/perks/armor.yml"));
-        SpeedConfig =  YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder()+"/perks/speed.yml"));
+        List<String> immutableList = List.of("health.yml", "attack_damage.yml", "speed.yml", "armor.yml","attack_speed.yml");
+        immutableList.forEach(this::generateFile);
+        ReloadConfig();
 
 
     }
     public void ReloadConfig(){
-        healthConfig = YamlConfiguration.loadConfiguration(new File("perks/health.yml"));
-        SpeedConfig = YamlConfiguration.loadConfiguration(new File("perks/speed.yml"));
-        ArmorConfig = YamlConfiguration.loadConfiguration(new File("perks/armor.yml"));
+        healthConfig = YamlConfiguration.loadConfiguration(getConfigFile("health.yml"));
+        AttackDamageConfig = YamlConfiguration.loadConfiguration(getConfigFile("attack_damage.yml"));
+        SpeedConfig = YamlConfiguration.loadConfiguration(getConfigFile("speed.yml"));
+        AttackSpeedConfig = YamlConfiguration.loadConfiguration(getConfigFile("attack_speed.yml"));
+        ArmorConfig = YamlConfiguration.loadConfiguration(getConfigFile("armor.yml"));
+    }
+    private File getConfigFile(String name){
+        return new File(plugin.getDataFolder()+"/perks/"+name);
+    }
+    private void generateFile(String name){
+        plugin.saveResource("perks/"+name, false);
     }
 }

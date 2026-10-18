@@ -14,8 +14,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class ArmorPerk extends AbstractPerk {
 
-    public ArmorPerk(String id, String displayName, CorePlugin plugin, FileConfiguration config) {
-        super(id, displayName, plugin,"armor_perk",config);
+    public ArmorPerk(String id, CorePlugin plugin, FileConfiguration config) {
+        super(id, plugin,config);
     }
     @Override
     public ItemStack onApply(ItemStack item) {

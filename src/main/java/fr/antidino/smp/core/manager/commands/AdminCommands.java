@@ -64,8 +64,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
             completions.add("give");
         }
         if (args.length == 2 &&  args[0].equals("give")) {
-            completions.add("armor_perk");
-            completions.add("health_perk");
+            plugin.perkManager.getPerks().forEach(perk -> {
+                completions.add(perk.getId());
+            });
         }
         if (args.length == 3 && args[0].equals("give")) {
             completions.add("01");

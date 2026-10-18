@@ -3,9 +3,7 @@ package fr.antidino.smp.core.manager.perk;
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.config.ConfigPerkLoader;
 import fr.antidino.smp.core.manager.perk.config.ConfigPerkManager;
-import fr.antidino.smp.core.manager.perk.type.ArmorPerk;
-import fr.antidino.smp.core.manager.perk.type.HealthPerk;
-import fr.antidino.smp.core.manager.perk.type.SpeedPerk;
+import fr.antidino.smp.core.manager.perk.type.*;
 import org.bukkit.NamespacedKey;
 
 import java.util.ArrayList;
@@ -25,9 +23,11 @@ public class PerkManager {
     private void registerDefaults() {
 
         ConfigPerkManager configPerkManager = plugin.configPerkManager;
-        registerPerk(new HealthPerk("health_perk", "Cœur Supplémentaire",plugin,configPerkManager.healthConfig));
-        registerPerk(new ArmorPerk("armor_perk","Résistance Supplémentaire",plugin,configPerkManager.ArmorConfig));
-        registerPerk(new SpeedPerk("speed_perk","Speed",plugin,configPerkManager.SpeedConfig));
+        registerPerk(new HealthPerk("health_perk",plugin,configPerkManager.healthConfig));
+        registerPerk(new ArmorPerk("armor_perk",plugin,configPerkManager.ArmorConfig));
+        registerPerk(new SpeedPerk("speed_perk",plugin,configPerkManager.SpeedConfig));
+        registerPerk(new AttackSpeedPerk("attack_speed_perk",plugin,configPerkManager.AttackSpeedConfig));
+        registerPerk(new AttackDamagePerk("attack_damage_perk",plugin,configPerkManager.AttackDamageConfig));
     }
 
     public void registerPerk(AbstractPerk perk) {

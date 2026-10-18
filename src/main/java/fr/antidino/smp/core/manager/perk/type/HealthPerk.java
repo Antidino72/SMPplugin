@@ -15,8 +15,8 @@ import org.bukkit.inventory.ItemStack;
 public class HealthPerk extends AbstractPerk {
 
 
-    public HealthPerk(String id, String displayName, CorePlugin plugin, FileConfiguration config) {
-        super(id, displayName, plugin,"health_perk",config);
+    public HealthPerk(String id, CorePlugin plugin, FileConfiguration config) {
+        super(id, plugin,config);
     }
 
 

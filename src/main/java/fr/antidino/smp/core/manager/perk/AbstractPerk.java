@@ -28,27 +28,43 @@ public abstract class AbstractPerk {
     protected final NamespacedKey key;
     protected final ItemStack item;
 
-    public AbstractPerk(String id, String displayName, CorePlugin plugin, String keyName,FileConfiguration config) {
+    public AbstractPerk(String id, CorePlugin plugin,FileConfiguration config) {
         this.id = id;
-        this.displayName = displayName;
+        this.displayName = loadName(config);
         this.plugin = plugin;
-        this.key = new NamespacedKey(plugin, keyName);
+        this.key = new NamespacedKey(plugin, id);
         this.item = loadItem(config);
         registerCraft(config);
 
     }
 
+    /*
+        Methode pour récupérer les infos d'un perk
+     */
     public String getId() {
         return id;
     }
     public ItemStack getItem() {
         return item;
     }
-    public ItemStack loadItem(FileConfiguration configuration) {
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public NamespacedKey getKey() {
+        return key;
+    }
+
+    /*
+            Fonction utilitaire pour Charger les infos
+     */
+    private String loadName(FileConfiguration config) {
+        return config.getString("item.display_name","<red>Display name");
+    }
+    private ItemStack loadItem(FileConfiguration configuration) {
         if (configuration == null) {
             return getNotFoundItem();
         }
-
         String displayName = configuration.getString("item.display_name");
         if (displayName == null) {
             log.info("displayName config not found");
@@ -74,15 +90,7 @@ public abstract class AbstractPerk {
     private ItemStack getNotFoundItem(){
         return new ItemBuilder(Material.BARRIER,plugin).setName(MiniMessage.miniMessage().deserialize("<red>NOT FOUND<red>")).build();
     }
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public NamespacedKey getKey() {
-        return key;
-    }
-
-    public void registerCraft(FileConfiguration config) {
+    private void registerCraft(FileConfiguration config) {
         if (Bukkit.getRecipe(key) != null) {
             Bukkit.removeRecipe(key);
         }
@@ -124,6 +132,10 @@ public abstract class AbstractPerk {
             Bukkit.addRecipe(recipe);
         }
     }
+
+    /*
+        Fonctions pour gérer les evenement des perk
+     */
 
     public abstract ItemStack onApply(ItemStack item);
     public abstract void onRemove(Player player, ItemStack item);

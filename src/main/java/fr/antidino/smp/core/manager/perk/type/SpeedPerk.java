@@ -16,14 +16,14 @@ import org.bukkit.inventory.ItemStack;
 public class SpeedPerk extends AbstractPerk {
 
 
-    public SpeedPerk(String id, String displayName, CorePlugin plugin, FileConfiguration config) {
-        super(id, displayName, plugin,"speed_perk",config);
+    public SpeedPerk(String id, CorePlugin plugin, FileConfiguration config) {
+        super(id,plugin, config);
     }
 
 
     @Override
     public ItemStack onApply(ItemStack item) {
-        return new ItemBuilder(item,this.plugin)
+        return new ItemBuilder(item, this.plugin)
                 .addAttribute(
                         Attribute.MOVEMENT_SPEED,
                         1.3,

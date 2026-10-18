@@ -16,12 +16,8 @@ public class PlayerJoinListener implements Listener {
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            plugin.perkManager.getPerks().forEach(perk -> {
-                log.info("Register recipe ... "+ perk.getKey());
-                event.getPlayer().discoverRecipe(perk.getKey());
-            });
-
+        plugin.perkManager.getPerks().forEach(perk -> {
+            event.getPlayer().discoverRecipe(perk.getKey());
         });
     }
 }
