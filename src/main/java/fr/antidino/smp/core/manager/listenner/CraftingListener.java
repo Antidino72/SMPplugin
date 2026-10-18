@@ -27,7 +27,6 @@ public class CraftingListener implements Listener {
     public CraftingListener(CorePlugin plugin) {
         this.corePlugin = plugin;
         this.slotManager = new SlotManager(plugin);
-        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
@@ -61,7 +60,6 @@ public class CraftingListener implements Listener {
                 ItemStack item = event.getRecipe().getResult();
                 item = slotManager.initializeSlots(item);
                 event.getInventory().setResult(item);
-                event.getInventory().addItem(item);
                 break;
             }
         }

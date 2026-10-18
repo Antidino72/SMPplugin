@@ -10,7 +10,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
 import org.bukkit.util.Vector;
 
 public class WardenPerk extends AbstractPerk {
@@ -33,15 +32,9 @@ public class WardenPerk extends AbstractPerk {
 
 
         caster.getWorld().playSound(startLoc, Sound.ENTITY_WARDEN_SONIC_BOOM, 3.0f, 1.0f);
-
-
         for (double d = 1; d <= 15; d += 0.5) {
             Location currentLoc = startLoc.clone().add(direction.clone().multiply(d));
-
-
             caster.getWorld().spawnParticle(Particle.SONIC_BOOM, currentLoc, 1, 0, 0, 0, 0);
-
-
             for (org.bukkit.entity.Entity entity : currentLoc.getWorld().getNearbyEntities(currentLoc, 0.8, 0.8, 0.8)) {
                 if (entity instanceof LivingEntity target && !entity.equals(caster)) {
                     target.damage(15.0, caster);
