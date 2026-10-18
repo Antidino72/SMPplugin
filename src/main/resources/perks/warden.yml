@@ -13,9 +13,5 @@ craft :
     X: "SCULK"
     C: "SCULK_CATALYST"
     D: "DIAMOND_BLOCKS"
-attribute:
-  1 :
-    type: "GENERIC_MAX_HEALTH"
-    amount: 4.0
-    operation: "ADD_NUMBER"
-    slot-group: "ARMOR"
+cooldown : 30
+cooldown-message : "<red>Tu dois attendre encore %time%s avant de réutiliser La Capacité du Warden !"

@@ -2,16 +2,11 @@ package fr.antidino.smp.core.manager.listenner;
 
 
 import fr.antidino.smp.CorePlugin;
-import fr.antidino.smp.core.manager.SlotManager;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
-import fr.antidino.smp.librairie.ItemBuilder;
 import fr.antidino.smp.librairie.PDCBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Item;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.PrepareSmithingEvent;
-import org.bukkit.event.inventory.SmithItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 

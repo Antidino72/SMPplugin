@@ -12,9 +12,6 @@ import fr.antidino.smp.core.SmithingRegisterAllItem;
 import fr.antidino.smp.core.manager.perk.config.ConfigPerkManager;
 import fr.antidino.smp.core.manager.perk.PerkManager;
 import fr.antidino.smp.librairie.PDCBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +37,6 @@ public final class CorePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SmithingListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
-        new CraftingListener(this);
 
         pdcBuilder = new PDCBuilder(this);
 
