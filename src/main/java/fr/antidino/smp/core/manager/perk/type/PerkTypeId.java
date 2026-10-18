@@ -10,4 +10,5 @@ public class PerkTypeId {
     public static final String NO_FALL_PERK = "no_fall_perk";
     public static final String ATTACK_DAMAGE = "attack_damage_perk";
     public static final String WARDEN_PERK = "warden_perk";
+    public static final String LIFESTEAL_PERK = "lifesteal_perk";
 }

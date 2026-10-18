@@ -1,0 +1,14 @@
+id : "lifesteal"
+item:
+  material : REDSTONE
+  display_name : "<red>LifeSteal Boost<red>"
+craft :
+  shape :
+    - "XCX"
+    - "CCC"
+    - "XCX"
+  ingredient :
+    X : DIAMOND_BLOCK
+    C : APPLE
+# pourcentage
+amount : 2.0
