@@ -1,4 +1,4 @@
-package fr.antidino.smp.core.manager.listenner;
+package fr.antidino.smp.core.listenner;
 
 
 import fr.antidino.smp.CorePlugin;

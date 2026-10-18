@@ -1,4 +1,4 @@
-package fr.antidino.smp.core.manager.commands;
+package fr.antidino.smp.core.commands;
 
 import fr.antidino.smp.CorePlugin;
 import net.kyori.adventure.text.minimessage.MiniMessage;

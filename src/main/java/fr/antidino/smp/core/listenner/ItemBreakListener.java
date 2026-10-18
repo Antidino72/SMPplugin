@@ -1,4 +1,4 @@
-package fr.antidino.smp.core.manager.listenner;
+package fr.antidino.smp.core.listeners;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
