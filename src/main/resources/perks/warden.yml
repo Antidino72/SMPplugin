@@ -12,10 +12,15 @@ craft :
     E : "ECHO_SHARD"
     X: "SCULK"
     C: "SCULK_CATALYST"
-    D: "DIAMOND_BLOCKS"
+    D: "DIAMOND_BLOCK"
 attribute:
   1 :
     type: "GENERIC_MAX_HEALTH"
     amount: 4.0
     operation: "ADD_NUMBER"
     slot-group: "ARMOR"
+
+# Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
+description:
+  - "<gray>Libère un <aqua>rayon sonique</aqua> au clic,"
+  - "<gray>comme le Warden (à appliquer sur des bottes)."

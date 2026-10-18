@@ -17,3 +17,8 @@ attribute:
     amount: 4.0
     operation: "ADD_NUMBER"
     slot-group: "ARMOR"
+
+# Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
+description:
+  - "<gray>Augmente votre <red>vitesse d'attaque</red>"
+  - "<gray>(à appliquer sur une arme)."

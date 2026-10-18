@@ -17,7 +17,11 @@ import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractPerk {
 
@@ -27,6 +31,10 @@ public abstract class AbstractPerk {
     protected final CorePlugin plugin;
     protected final NamespacedKey key;
     protected final ItemStack item;
+    // Infos utilisées par le menu /perks codex
+    protected final List<String> description;
+    protected final List<String> craftShape;
+    protected final Map<Character, Material> craftIngredients;
 
     public AbstractPerk(String id, CorePlugin plugin,FileConfiguration config) {
         this.id = id;
@@ -34,6 +42,9 @@ public abstract class AbstractPerk {
         this.plugin = plugin;
         this.key = new NamespacedKey(plugin, id);
         this.item = loadItem(config);
+        this.description = loadDescription(config);
+        this.craftShape = loadCraftShape(config);
+        this.craftIngredients = loadCraftIngredients(config);
         registerCraft(config);
 
     }
@@ -54,12 +65,46 @@ public abstract class AbstractPerk {
     public NamespacedKey getKey() {
         return key;
     }
+
+    /** Lignes de description (format MiniMessage) définies dans le fichier du perk. */
+    public List<String> getDescription() {
+        return description;
+    }
+
+    /** Forme du craft (max 3 lignes de 3 caractères). */
+    public List<String> getCraftShape() {
+        return craftShape;
+    }
+
+    /** Caractère de la forme -> matériau. */
+    public Map<Character, Material> getCraftIngredients() {
+        return craftIngredients;
+    }
     /*
             Fonction utilitaire pour Charger les infos
      */
 
     private String loadName(FileConfiguration config) {
         return config.getString("item.display_name","<red>Display name");
+    }
+    private List<String> loadDescription(FileConfiguration config) {
+        return Collections.unmodifiableList(new ArrayList<>(config.getStringList("description")));
+    }
+    private List<String> loadCraftShape(FileConfiguration config) {
+        return Collections.unmodifiableList(new ArrayList<>(config.getStringList("craft.shape")));
+    }
+    private Map<Character, Material> loadCraftIngredients(FileConfiguration config) {
+        Map<Character, Material> map = new LinkedHashMap<>();
+        ConfigurationSection sec = config.getConfigurationSection("craft.ingredient");
+        if (sec == null) return Collections.unmodifiableMap(map);
+        for (String k : sec.getKeys(false)) {
+            if (k.isEmpty()) continue;
+            String name = sec.getString(k);
+            if (name == null) continue;
+            Material m = Material.matchMaterial(name);
+            if (m != null) map.put(k.charAt(0), m);
+        }
+        return Collections.unmodifiableMap(map);
     }
     private ItemStack loadItem(FileConfiguration configuration) {
         if (configuration == null) {

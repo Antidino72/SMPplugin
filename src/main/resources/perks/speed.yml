@@ -17,3 +17,8 @@ attribute:
     amount: 4.0
     operation: "ADD_NUMBER"
     slot-group: "ARMOR"
+
+# Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
+description:
+  - "<gray>Augmente votre <aqua>vitesse de déplacement</aqua>"
+  - "<gray>(à appliquer sur des bottes)."
