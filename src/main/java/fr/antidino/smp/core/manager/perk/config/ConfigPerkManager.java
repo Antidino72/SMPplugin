@@ -20,6 +20,7 @@ public class ConfigPerkManager {
     public FileConfiguration AttackDamageConfig;
     public FileConfiguration NoFallConfig;
     public FileConfiguration WardenConfig;
+    public FileConfiguration LifeStealConfig;
 
     public ConfigPerkManager(CorePlugin plugin) {
 
@@ -28,7 +29,11 @@ public class ConfigPerkManager {
     }
     public void LoadConfigAtStart(){
 
-        List<String> immutableList = List.of("health.yml", "attack_damage.yml", "speed.yml", "armor.yml","attack_speed.yml","nofall.yml","warden.yml");
+        List<String> immutableList = List.of(
+                "health.yml", "attack_damage.yml",
+                "speed.yml", "armor.yml",
+                "attack_speed.yml","nofall.yml",
+                "warden.yml","lifesteal.yml");
         immutableList.forEach(this::generateFile);
         ReloadConfig();
 
@@ -42,6 +47,7 @@ public class ConfigPerkManager {
         ArmorConfig = YamlConfiguration.loadConfiguration(getConfigFile("armor.yml"));
         NoFallConfig = YamlConfiguration.loadConfiguration(getConfigFile("nofall.yml"));
         WardenConfig = YamlConfiguration.loadConfiguration(getConfigFile("warden.yml"));
+        LifeStealConfig = YamlConfiguration.loadConfiguration(getConfigFile("lifesteal.yml"));
 
     }
     private File getConfigFile(String name){

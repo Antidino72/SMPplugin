@@ -6,6 +6,8 @@ import fr.antidino.smp.core.manager.perk.type.PerkTypeId;
 import fr.antidino.smp.core.manager.perk.type.WardenPerk;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -51,6 +53,24 @@ public class PerkListenner implements Listener {
                 cooldownManager.setCooldown(player.getUniqueId(), plugin.configPerkManager.WardenConfig.getInt("cooldown",5));
                 event.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        log.info(event.getCause().toString());
+        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
+        if (event.getDamager() instanceof Player player) {
+            if (plugin.perkManager.hasPerk(PerkTypeId.LIFESTEAL_PERK,player, EquipmentSlot.HAND)){
+                double amount = event.getDamage();
+                double lifesteal = amount * plugin.configPerkManager.LifeStealConfig.getDouble("amount", 5) / 100;
+                double newHealth = Math.min(player.getHealth() + lifesteal, player.getAttribute(Attribute.MAX_HEALTH).getValue());
+                player.setHealth(newHealth);
+            }else {
+                log.info("Not have lifesteal boost.");
+            }
+        }else {
+            log.info(event.getDamager().toString());
         }
     }
 }

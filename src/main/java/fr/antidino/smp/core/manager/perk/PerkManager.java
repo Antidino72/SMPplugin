@@ -40,6 +40,7 @@ public class PerkManager {
         registerPerk(new AttackDamagePerk(PerkTypeId.ATTACK_DAMAGE,plugin,configPerkManager.AttackDamageConfig));
         registerPerk(new NoFallPerk(PerkTypeId.NO_FALL_PERK,plugin,configPerkManager.NoFallConfig));
         registerPerk(new WardenPerk(PerkTypeId.WARDEN_PERK,plugin,configPerkManager.WardenConfig));
+        registerPerk(new LifeStealPerk(PerkTypeId.LIFESTEAL_PERK,plugin,configPerkManager.LifeStealConfig));
     }
 
     public void registerPerk(AbstractPerk perk) {
