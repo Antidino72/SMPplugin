@@ -1,0 +1,30 @@
+id : "double_jump"
+item:
+  material : "FEATHER"
+  display_name : "<white>Double Jump"
+craft :
+  shape :
+    - "XPX"
+    - "DED"
+    - "XPX"
+  ingredient :
+    X : "FEATHER"
+    P : "PHANTOM_MEMBRANE"
+    D : "DIAMOND_BLOCK"
+    E : "ENDER_PEARL"
+
+# Niveaux : crafter plusieurs perks du même niveau en table de craft = niveau suivant
+level:
+  max: 3
+  upgrade_cost: 2
+
+# Valeurs par niveau [niv1, niv2, niv3]
+values:
+  jumps: [1, 2, 3]          # nombre de sauts en l'air
+  power: [0.85, 0.95, 1.05] # puissance verticale du saut
+
+# Fonctionne sur n'importe quelle pièce d'armure (le niveau le plus haut est utilisé)
+description:
+  - "<gray>Appuyez deux fois sur <white>saut</white> en l'air"
+  - "<gray>pour sauter à nouveau."
+  - "<gray>Niveaux supérieurs : <white>plus de sauts</white>."

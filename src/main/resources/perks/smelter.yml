@@ -1,0 +1,22 @@
+id : "smelter"
+item:
+  material : "BLAZE_POWDER"
+  display_name : "<gold>Smelter"
+craft :
+  shape :
+    - "RMR"
+    - "DFD"
+    - "RMR"
+  ingredient :
+    R : "BLAZE_ROD"
+    M : "MAGMA_BLOCK"
+    D : "DIAMOND_BLOCK"
+    F : "FURNACE"
+
+level:
+  max: 1
+
+# Fonctionne sur l'outil tenu en main (pioche)
+description:
+  - "<gray>Les <white>minerais</white> minés sont fondus"
+  - "<gray>automatiquement (à appliquer sur une pioche)."

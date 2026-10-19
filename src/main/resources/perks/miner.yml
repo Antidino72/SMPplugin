@@ -1,0 +1,30 @@
+id : "miner"
+item:
+  material : "FLINT"
+  display_name : "<yellow>Miner"
+craft :
+  shape :
+    - "GDG"
+    - "DPD"
+    - "GDG"
+  ingredient :
+    G : "GOLD_BLOCK"
+    D : "DIAMOND_BLOCK"
+    P : "DIAMOND_PICKAXE"
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+# Perk piloté par attributs : attribute / amount / amount_per_level / operation / slot_group
+modifiers:
+  efficiency:
+    attribute: "MINING_EFFICIENCY"
+    amount: 4.0
+    amount_per_level: 4.0
+    operation: "ADD_NUMBER"
+    slot_group: "MAINHAND"
+
+description:
+  - "<gray>Augmente votre <white>vitesse de minage</white>"
+  - "<gray>(à appliquer sur une pioche, pelle ou hache)."

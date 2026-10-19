@@ -6,12 +6,21 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigPerkManager {
     CorePlugin plugin;
+
+    /** Tous les fichiers de perks (dans resources/perks/ et plugins/SMPplugin/perks/). */
+    public static final List<String> FILES = List.of(
+            "health.yml", "attack_damage.yml", "speed.yml", "armor.yml", "attack_speed.yml", "nofall.yml", "warden.yml",
+            "double_jump.yml", "night_vision.yml", "vampire.yml", "magnet.yml", "smelter.yml",
+            "miner.yml", "sprinter.yml", "glass_cannon.yml"
+    );
+
+    private final Map<String, FileConfiguration> configs = new HashMap<>();
 
     public FileConfiguration healthConfig;
     public FileConfiguration ArmorConfig;
@@ -28,21 +37,29 @@ public class ConfigPerkManager {
     }
     public void LoadConfigAtStart(){
 
-        List<String> immutableList = List.of("health.yml", "attack_damage.yml", "speed.yml", "armor.yml","attack_speed.yml","nofall.yml","warden.yml");
-        immutableList.forEach(this::generateFile);
+        FILES.forEach(this::generateFile);
         ReloadConfig();
 
 
     }
     public void ReloadConfig(){
-        healthConfig = YamlConfiguration.loadConfiguration(getConfigFile("health.yml"));
-        AttackDamageConfig = YamlConfiguration.loadConfiguration(getConfigFile("attack_damage.yml"));
-        SpeedConfig = YamlConfiguration.loadConfiguration(getConfigFile("speed.yml"));
-        AttackSpeedConfig = YamlConfiguration.loadConfiguration(getConfigFile("attack_speed.yml"));
-        ArmorConfig = YamlConfiguration.loadConfiguration(getConfigFile("armor.yml"));
-        NoFallConfig = YamlConfiguration.loadConfiguration(getConfigFile("nofall.yml"));
-        WardenConfig = YamlConfiguration.loadConfiguration(getConfigFile("warden.yml"));
+        configs.clear();
+        for (String name : FILES) {
+            configs.put(name, YamlConfiguration.loadConfiguration(getConfigFile(name)));
+        }
+        healthConfig = configs.get("health.yml");
+        AttackDamageConfig = configs.get("attack_damage.yml");
+        SpeedConfig = configs.get("speed.yml");
+        AttackSpeedConfig = configs.get("attack_speed.yml");
+        ArmorConfig = configs.get("armor.yml");
+        NoFallConfig = configs.get("nofall.yml");
+        WardenConfig = configs.get("warden.yml");
 
+    }
+
+    /** Récupère la config d'un perk par nom de fichier (ex: "vampire.yml"). */
+    public FileConfiguration get(String fileName) {
+        return configs.get(fileName);
     }
     private File getConfigFile(String name){
         return new File(plugin.getDataFolder()+"/perks/"+name);

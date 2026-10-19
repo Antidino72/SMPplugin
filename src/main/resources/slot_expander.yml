@@ -1,0 +1,37 @@
+# Item craftable qui ajoute des emplacements de perks à un équipement.
+# Utilisation : table de forge -> équipement en haut, cet item dans la case du bas.
+item:
+  material: "AMETHYST_SHARD"      # ne pas mettre une armure/un outil
+  display_name: "<light_purple>Cristal d'emplacement"
+
+slots:
+  added: 1          # emplacements ajoutés par utilisation
+  max: 6            # maximum d'emplacements par équipement
+  # Équipements acceptés EN PLUS des armures/épées/haches/pioches/pelles/boucliers
+  extra_items:
+    - "WOODEN_HOE"
+    - "STONE_HOE"
+    - "IRON_HOE"
+    - "GOLDEN_HOE"
+    - "DIAMOND_HOE"
+    - "NETHERITE_HOE"
+    - "BOW"
+    - "CROSSBOW"
+    - "TRIDENT"
+    - "MACE"
+    - "ELYTRA"
+    - "FISHING_ROD"
+
+craft:
+  shape:
+    - "DND"
+    - "NSN"
+    - "DND"
+  ingredient:
+    D: "DIAMOND_BLOCK"
+    N: "NETHERITE_INGOT"
+    S: "NETHER_STAR"
+
+description:
+  - "<gray>Ajoute un <light_purple>emplacement de perk</light_purple>"
+  - "<gray>à une armure, une arme ou un outil."

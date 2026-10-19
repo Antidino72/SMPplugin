@@ -3,8 +3,6 @@ package fr.antidino.smp.core.manager.perk.type;
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
 import fr.antidino.smp.librairie.ItemBuilder;
-import fr.antidino.smp.librairie.PDCBuilder;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,19 +15,31 @@ public class ArmorPerk extends AbstractPerk {
     public ArmorPerk(String id, CorePlugin plugin, FileConfiguration config) {
         super(id, plugin,config);
     }
+
+    @Override
+    protected int defaultMaxLevel() {
+        return 3;
+    }
+
     @Override
     public ItemStack onApply(ItemStack item) {
+        return onApply(item, 1);
+    }
+
+    @Override
+    public ItemStack onApply(ItemStack item, int level) {
+        double m = getMultiplier(level);
         return new ItemBuilder(item,this.plugin)
 
                 .addAttribute(
                         Attribute.ARMOR_TOUGHNESS,
-                        1.5,
+                        1.5 * m,
                         AttributeModifier.Operation.ADD_SCALAR,
                         EquipmentSlotGroup.ARMOR
                 )
                 .addAttribute(
                         Attribute.ARMOR,
-                        1.3,
+                        1.3 * m,
                         AttributeModifier.Operation.ADD_SCALAR,
                         EquipmentSlotGroup.ARMOR
                 )

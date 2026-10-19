@@ -50,6 +50,11 @@ public class CodexListener implements Listener {
             plugin.codexMenu.openList(player, holder.page - 1);
             return;
         }
+        if (slot == CodexMenu.EXPANDER_SLOT && plugin.slotExpander != null) {
+            click(player);
+            plugin.codexMenu.openExpanderDetail(player, holder.page);
+            return;
+        }
         if (slot == CodexMenu.NEXT_SLOT) {
             List<AbstractPerk> perks = plugin.codexMenu.getSortedPerks();
             if ((holder.page + 1) * CodexMenu.PERKS_PER_PAGE < perks.size()) {

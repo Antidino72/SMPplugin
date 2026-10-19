@@ -1,0 +1,27 @@
+id : "magnet"
+item:
+  material : "COMPASS"
+  display_name : "<gray>Magnet"
+craft :
+  shape :
+    - "IEI"
+    - "DCD"
+    - "IEI"
+  ingredient :
+    I : "IRON_BLOCK"
+    E : "ENDER_PEARL"
+    D : "DIAMOND_BLOCK"
+    C : "COMPASS"
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+values:
+  radius: [3, 5, 8]               # portée en blocs
+  speed: [0.35, 0.40, 0.45]       # vitesse d'attraction
+
+# Fonctionne sur n'importe quelle pièce d'armure
+description:
+  - "<gray>Attire les <white>objets au sol</white> proches"
+  - "<gray>vers vous."
