@@ -1,0 +1,37 @@
+id : "sprinter"
+item:
+  material : "SUGAR"
+  display_name : "<green>Sprinter"
+craft :
+  shape :
+    - "SDS"
+    - "DRD"
+    - "SDS"
+  ingredient :
+    S : "SUGAR"
+    D : "DIAMOND_BLOCK"
+    R : "RABBIT_FOOT"
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+# Perk avec contrepartie : bonus de vitesse, malus de vie max
+modifiers:
+  speed:
+    attribute: "MOVEMENT_SPEED"
+    amount: 0.10
+    amount_per_level: 0.05
+    operation: "ADD_SCALAR"
+    slot_group: "FEET"
+  health:
+    attribute: "MAX_HEALTH"
+    amount: -2.0
+    amount_per_level: -1.0
+    operation: "ADD_NUMBER"
+    slot_group: "FEET"
+
+description:
+  - "<green>+ vitesse de déplacement</green>"
+  - "<red>- vie maximale</red>"
+  - "<gray>(à appliquer sur des bottes)."

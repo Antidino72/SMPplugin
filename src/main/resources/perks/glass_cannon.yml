@@ -1,0 +1,38 @@
+id : "glass_cannon"
+item:
+  material : "FIRE_CHARGE"
+  display_name : "<red>Glass Cannon"
+craft :
+  shape :
+    - "BGB"
+    - "DTD"
+    - "BGB"
+  ingredient :
+    B : "BLAZE_ROD"
+    G : "GLASS"
+    D : "DIAMOND_BLOCK"
+    T : "TNT"
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+# Perk avec contrepartie : gros dégâts, armure réduite tant que l'arme est en main
+modifiers:
+  damage:
+    attribute: "ATTACK_DAMAGE"
+    amount: 0.30
+    amount_per_level: 0.10
+    operation: "ADD_SCALAR"
+    slot_group: "MAINHAND"
+  armor:
+    attribute: "ARMOR"
+    amount: -3.0
+    amount_per_level: -1.0
+    operation: "ADD_NUMBER"
+    slot_group: "MAINHAND"
+
+description:
+  - "<green>+ dégâts d'attaque</green>"
+  - "<red>- armure</red> <gray>tant que l'arme est en main"
+  - "<gray>(à appliquer sur une arme)."

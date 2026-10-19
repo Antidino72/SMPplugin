@@ -19,7 +19,11 @@ import java.util.List;
 import java.util.Map;
 
 public class PerkManager {
+    private final ConfigPerkManager configPerkManager;
     private static final Logger log = LoggerFactory.getLogger(PerkManager.class);
+    private static final EquipmentSlot[] ARMOR_SLOTS = {
+            EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
+    };
     private final Map<String, AbstractPerk> registeredPerks = new HashMap<>();
     private final CorePlugin plugin;
 
@@ -28,6 +32,7 @@ public class PerkManager {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(new PerkListenner(plugin),plugin);
         registerDefaults();
+        configPerkManager = plugin.configPerkManager;
     }
 
     private void registerDefaults() {
@@ -40,6 +45,24 @@ public class PerkManager {
         registerPerk(new AttackDamagePerk(PerkTypeId.ATTACK_DAMAGE,plugin,configPerkManager.AttackDamageConfig));
         registerPerk(new NoFallPerk(PerkTypeId.NO_FALL_PERK,plugin,configPerkManager.NoFallConfig));
         registerPerk(new WardenPerk(PerkTypeId.WARDEN_PERK,plugin,configPerkManager.WardenConfig));
+
+        // Nouveaux perks (effets gérés par PerkTasks / PerkEffectListener)
+        registerPerk(new PassivePerk(PerkTypeId.DOUBLE_JUMP, plugin, configPerkManager.get("double_jump.yml")));
+        registerPerk(new PassivePerk(PerkTypeId.NIGHT_VISION, plugin, configPerkManager.get("night_vision.yml")));
+        registerPerk(new PassivePerk(PerkTypeId.MAGNET, plugin, configPerkManager.get("magnet.yml")));
+        registerPerk(new PassivePerk(PerkTypeId.SMELTER, plugin, configPerkManager.get("smelter.yml")));
+
+        // Perks pilotés par une liste de modificateurs d'attributs dans le yml (bonus + malus)
+        registerPerk(new AttributePerk(PerkTypeId.MINER, plugin, configPerkManager.get("miner.yml")));
+        registerPerk(new AttributePerk(PerkTypeId.SPRINTER, plugin, configPerkManager.get("sprinter.yml")));
+        registerPerk(new AttributePerk(PerkTypeId.GLASS_CANNON, plugin, configPerkManager.get("glass_cannon.yml")));
+    }
+
+    /** Recharge tous les perks depuis les yml (crafts et crafts d'amélioration inclus). */
+    public void reload() {
+        registeredPerks.values().forEach(AbstractPerk::unregisterRecipes);
+        registeredPerks.clear();
+        registerDefaults();
         registerPerk(new LifeStealPerk(PerkTypeId.LIFESTEAL_PERK,plugin,configPerkManager.LifeStealConfig));
     }
 
@@ -70,29 +93,58 @@ public class PerkManager {
         if (perks == null) return false;
         return perks.contains(getPerk(id));
     }
+
+    private ItemStack getItemInSlot(Player player, EquipmentSlot slot) {
+        return switch (slot) {
+            case LEGS -> player.getInventory().getLeggings();
+            case FEET -> player.getInventory().getBoots();
+            case HEAD -> player.getInventory().getHelmet();
+            case CHEST -> player.getInventory().getChestplate();
+            case OFF_HAND -> player.getInventory().getItemInOffHand();
+            case HAND -> player.getInventory().getItemInMainHand();
+            default -> null;
+        };
+    }
+
+    private List<String> readEntries(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return null;
+        return item.getItemMeta().getPersistentDataContainer().get(PDCBuilder.SLOTS, PersistentDataType.LIST.strings());
+    }
+
     public ArrayList<AbstractPerk> getEquippedPerk(Player player, EquipmentSlot slot) {
-            ItemStack item = null;
+        List<String> entries = readEntries(getItemInSlot(player, slot));
+        if (entries == null) return null;
+        ArrayList<AbstractPerk> perks = new ArrayList<>();
+        for (String raw : entries) {
+            AbstractPerk perk = registeredPerks.get(PerkEntry.parse(raw).id());
+            if (perk != null) perks.add(perk);
+        }
+        return perks;
+    }
 
-           switch (slot) {
-               case LEGS ->  item = player.getInventory().getLeggings();
-               case FEET ->  item = player.getInventory().getBoots();
-               case HEAD ->  item = player.getInventory().getHelmet();
-               case CHEST ->  item = player.getInventory().getChestplate();
-               case OFF_HAND -> item = player.getInventory().getItemInOffHand();
-               case HAND ->   item = player.getInventory().getItemInMainHand();
-           }
-            if (item == null || !item.hasItemMeta())  return null;
+    /** Niveau (le plus haut) d'un perk sur l'item porté dans ce slot, 0 s'il n'y est pas. */
+    public int getPerkLevel(Player player, EquipmentSlot slot, String id) {
+        List<String> entries = readEntries(getItemInSlot(player, slot));
+        if (entries == null) return 0;
+        int best = 0;
+        for (String raw : entries) {
+            PerkEntry entry = PerkEntry.parse(raw);
+            if (entry.id().equals(id)) best = Math.max(best, entry.level());
+        }
+        return best;
+    }
 
-            ItemMeta meta = item.getItemMeta();
-            NamespacedKey key = PDCBuilder.SLOTS;
-            ArrayList<AbstractPerk> perks = new ArrayList<>();
-            if (meta.getPersistentDataContainer().has(key, PersistentDataType.LIST.strings())) {
-                List<String> perkId = meta.getPersistentDataContainer().get(key, PersistentDataType.LIST.strings());
-                perkId.forEach(id -> {
-                    perks.add(registeredPerks.get(id));
-                });
-                return perks;
+    /** Niveau le plus haut de chaque perk présent sur les 4 pièces d'armure (id -> niveau). */
+    public Map<String, Integer> getArmorPerkLevels(Player player) {
+        Map<String, Integer> levels = new HashMap<>();
+        for (EquipmentSlot slot : ARMOR_SLOTS) {
+            List<String> entries = readEntries(getItemInSlot(player, slot));
+            if (entries == null) continue;
+            for (String raw : entries) {
+                PerkEntry entry = PerkEntry.parse(raw);
+                levels.merge(entry.id(), entry.level(), Math::max);
             }
-            return null;
+        }
+        return levels;
     }
 }

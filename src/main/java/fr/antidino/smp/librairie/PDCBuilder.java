@@ -1,6 +1,8 @@
 package fr.antidino.smp.librairie;
 
 import fr.antidino.smp.CorePlugin;
+import fr.antidino.smp.core.manager.perk.AbstractPerk;
+import fr.antidino.smp.core.manager.perk.PerkEntry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -23,6 +25,8 @@ public class PDCBuilder {
     public static NamespacedKey USED_SLOTS;
     public static NamespacedKey SLOTS;
     public static NamespacedKey PERK_ID;
+    public static NamespacedKey PERK_LEVEL;
+    public static NamespacedKey SLOT_EXPANDER;
 
     private final CorePlugin plugin;
     public PDCBuilder(CorePlugin plugin) {
@@ -34,6 +38,8 @@ public class PDCBuilder {
         USED_SLOTS = new NamespacedKey(plugin, "used_slots");
         PERK_ID = new NamespacedKey(plugin,"perk_id");
         SLOTS = new NamespacedKey(plugin, "perk_slots");
+        PERK_LEVEL = new NamespacedKey(plugin, "perk_level");
+        SLOT_EXPANDER = new NamespacedKey(plugin, "slot_expander");
 
     }
     public ItemStack initializeSlots(ItemStack item) {
@@ -114,18 +120,21 @@ public class PDCBuilder {
         }
 
         List<String> perks = getAppliedPerks(item);
+        int max = meta.getPersistentDataContainer().getOrDefault(MAX_SLOTS, PersistentDataType.INTEGER, 0);
         List<Component> lore = new ArrayList<>();
 
         lore.add(MiniMessage.miniMessage().deserialize("<!italic><gray>========================"));
-        lore.add(MiniMessage.miniMessage().deserialize("<!italic><gray>Améliorations :"));
+        lore.add(MiniMessage.miniMessage().deserialize("<!italic><gray>Améliorations <dark_gray>(<white>" + perks.size() + "<dark_gray>/<white>" + max + "<dark_gray>) <gray>:"));
 
         if (perks.isEmpty()) {
-            Bukkit.getLogger().warning("[SMPplugin] Perks list is empty");
             lore.add(MiniMessage.miniMessage().deserialize("<!italic><dark_gray> Aucun effet appliqué"));
         } else {
-            for (String perkId : perks) {
-
-                lore.add(MiniMessage.miniMessage().deserialize("<!italic><green> ▪ <white>" + perkId));
+            for (String raw : perks) {
+                PerkEntry entry = PerkEntry.parse(raw);
+                AbstractPerk perk = plugin.perkManager == null ? null : plugin.perkManager.getPerk(entry.id());
+                String name = perk != null ? perk.getDisplayName() : entry.id();
+                String level = entry.level() > 1 ? " <gray>" + AbstractPerk.roman(entry.level()) : "";
+                lore.add(MiniMessage.miniMessage().deserialize("<!italic><green> ▪ <white>" + name + level));
             }
         }
 
@@ -136,7 +145,11 @@ public class PDCBuilder {
         return item;
     }
 
-
-
+    /** Niveau d'un item perk (1 si absent : anciens items et niveau 1). */
+    public int getPerkLevel(ItemStack perkItem) {
+        if (perkItem == null || !perkItem.hasItemMeta()) return 1;
+        return Math.max(1, perkItem.getItemMeta().getPersistentDataContainer()
+                .getOrDefault(PERK_LEVEL, PersistentDataType.INTEGER, 1));
+    }
 
 }

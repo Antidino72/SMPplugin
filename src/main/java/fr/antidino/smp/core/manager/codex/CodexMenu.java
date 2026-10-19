@@ -16,11 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Menus du /perks codex :
- *  - LIST   : tous les perks actifs du serveur (paginé)
- *  - DETAIL : craft + description d'un perk
+ *  - LIST   : tous les perks actifs du serveur (paginé) + item d'extension de slots
+ *  - DETAIL : craft + description (+ niveaux) d'un perk ou de l'item de slots
  */
 public class CodexMenu {
 
@@ -35,8 +36,11 @@ public class CodexMenu {
 
     // Menu liste (54 slots) : barre du bas
     public static final int PREV_SLOT = 45;
+    public static final int EXPANDER_SLOT = 47;
     public static final int CLOSE_SLOT = 49;
     public static final int NEXT_SLOT = 53;
+
+    public static final String EXPANDER_ID = "__slot_expander__";
 
     public enum Type { LIST, DETAIL }
 
@@ -98,6 +102,7 @@ public class CodexMenu {
         for (int s = 45; s < 54; s++) inv.setItem(s, filler);
         if (page > 0) inv.setItem(PREV_SLOT, button(Material.ARROW, "<yellow>← Page précédente"));
         if (page < maxPage) inv.setItem(NEXT_SLOT, button(Material.ARROW, "<yellow>Page suivante →"));
+        if (plugin.slotExpander != null) inv.setItem(EXPANDER_SLOT, expanderListItem());
         inv.setItem(CLOSE_SLOT, button(Material.BARRIER, "<red>Fermer"));
 
         player.openInventory(inv);
@@ -110,7 +115,26 @@ public class CodexMenu {
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
-        lore.addAll(descriptionLines(perk));
+        lore.addAll(descriptionLines(perk.getDescription()));
+        if (perk.getMaxLevel() > 1) {
+            lore.add(Component.empty());
+            lore.add(mm("<gray>Niveau max : <white>" + AbstractPerk.roman(perk.getMaxLevel())));
+        }
+        lore.add(Component.empty());
+        lore.add(mm("<yellow>▶ Clic pour voir le craft"));
+        meta.lore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack expanderListItem() {
+        ItemStack item = plugin.slotExpander.getItem();
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.empty());
+        lore.addAll(descriptionLines(plugin.slotExpander.getDescription()));
         lore.add(Component.empty());
         lore.add(mm("<yellow>▶ Clic pour voir le craft"));
         meta.lore(lore);
@@ -121,8 +145,35 @@ public class CodexMenu {
     // ----------------------------------------------------------------- DETAIL
 
     public void openDetail(Player player, AbstractPerk perk, int fromPage) {
-        CodexHolder holder = new CodexHolder(Type.DETAIL, fromPage, perk.getId());
-        Inventory inv = Bukkit.createInventory(holder, 27, mm("<dark_gray>Craft : ").append(mm(perk.getDisplayName())));
+        List<Component> description = new ArrayList<>(descriptionLines(perk.getDescription()));
+        if (perk.getMaxLevel() > 1) {
+            description.add(Component.empty());
+            description.add(mm("<gray>Niveaux : <white>I <gray>→ <white>" + AbstractPerk.roman(perk.getMaxLevel())));
+            description.add(mm("<gray>Amélioration : <white>" + perk.getUpgradeCost() + " perks <gray>de même niveau"));
+            description.add(mm("<gray>en table de craft = niveau suivant"));
+        }
+        openRecipeView(player, perk.getId(), fromPage,
+                mm("<dark_gray>Craft : ").append(mm(perk.getDisplayName())),
+                perk.getItem().clone(), perk.getCraftShape(), perk.getCraftIngredients(), description);
+    }
+
+    public void openExpanderDetail(Player player, int fromPage) {
+        if (plugin.slotExpander == null) return;
+        List<Component> description = new ArrayList<>(descriptionLines(plugin.slotExpander.getDescription()));
+        description.add(Component.empty());
+        description.add(mm("<gray>Utilisation : <white>table de forge"));
+        description.add(mm("<gray>Ajoute <white>+" + plugin.slotExpander.getAdded() + " <gray>emplacement(s)"));
+        description.add(mm("<gray>Maximum : <white>" + plugin.slotExpander.getMax() + " <gray>par équipement"));
+        openRecipeView(player, EXPANDER_ID, fromPage,
+                mm("<dark_gray>Craft : ").append(mm(plugin.slotExpander.getDisplayName())),
+                plugin.slotExpander.getItem(), plugin.slotExpander.getCraftShape(),
+                plugin.slotExpander.getCraftIngredients(), description);
+    }
+
+    private void openRecipeView(Player player, String id, int fromPage, Component title, ItemStack result,
+                                List<String> shape, Map<Character, Material> ingredients, List<Component> description) {
+        CodexHolder holder = new CodexHolder(Type.DETAIL, fromPage, id);
+        Inventory inv = Bukkit.createInventory(holder, 27, title);
         holder.setInventory(inv);
 
         ItemStack filler = filler();
@@ -130,11 +181,10 @@ public class CodexMenu {
 
         // Grille 3x3 alignée en haut à gauche
         for (int slot : CRAFT_SLOTS) inv.setItem(slot, null);
-        List<String> shape = perk.getCraftShape();
         for (int row = 0; row < Math.min(3, shape.size()); row++) {
             String line = shape.get(row);
             for (int col = 0; col < Math.min(3, line.length()); col++) {
-                Material m = perk.getCraftIngredients().get(line.charAt(col));
+                Material m = ingredients.get(line.charAt(col));
                 if (m == null) continue;
                 if (!m.isItem()) m = Material.BARRIER;
                 inv.setItem(CRAFT_SLOTS[row * 3 + col], new ItemStack(m));
@@ -142,13 +192,12 @@ public class CodexMenu {
         }
 
         inv.setItem(ARROW_SLOT, button(Material.ARROW, "<gray>→"));
-        inv.setItem(RESULT_SLOT, perk.getItem().clone());
+        inv.setItem(RESULT_SLOT, result);
 
         ItemStack book = new ItemStack(Material.BOOK);
         ItemMeta meta = book.getItemMeta();
         meta.displayName(mm("<gold>Description"));
-        List<Component> lore = new ArrayList<>(descriptionLines(perk));
-        meta.lore(lore);
+        meta.lore(description);
         book.setItemMeta(meta);
         inv.setItem(DESCRIPTION_SLOT, book);
 
@@ -159,12 +208,12 @@ public class CodexMenu {
 
     // ---------------------------------------------------------------- HELPERS
 
-    private List<Component> descriptionLines(AbstractPerk perk) {
+    private List<Component> descriptionLines(List<String> lines) {
         List<Component> out = new ArrayList<>();
-        if (perk.getDescription().isEmpty()) {
+        if (lines.isEmpty()) {
             out.add(mm("<dark_gray>Aucune description configurée."));
         } else {
-            for (String line : perk.getDescription()) out.add(mm(line));
+            for (String line : lines) out.add(mm(line));
         }
         return out;
     }

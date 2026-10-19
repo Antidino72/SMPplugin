@@ -1,0 +1,21 @@
+id : "night_vision"
+item:
+  material : "SPIDER_EYE"
+  display_name : "<dark_aqua>Night Vision"
+craft :
+  shape :
+    - "XDX"
+    - "DED"
+    - "XDX"
+  ingredient :
+    X : "GOLDEN_CARROT"
+    D : "DIAMOND_BLOCK"
+    E : "ENDER_EYE"
+
+level:
+  max: 1
+
+# Fonctionne sur n'importe quelle pièce d'armure
+description:
+  - "<gray>Vous voyez <white>dans le noir</white> tant que"
+  - "<gray>l'équipement est porté."

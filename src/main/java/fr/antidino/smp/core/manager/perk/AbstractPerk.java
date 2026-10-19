@@ -12,7 +12,11 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,17 +39,26 @@ public abstract class AbstractPerk {
     protected final List<String> description;
     protected final List<String> craftShape;
     protected final Map<Character, Material> craftIngredients;
+    // Niveaux + valeurs configurables
+    protected final FileConfiguration config;
+    protected final int maxLevel;
+
+    private static final String[] ROMAN = {"0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"};
+    private static final int MAX_POSSIBLE_LEVEL = 10;
 
     public AbstractPerk(String id, CorePlugin plugin,FileConfiguration config) {
         this.id = id;
         this.displayName = loadName(config);
         this.plugin = plugin;
         this.key = new NamespacedKey(plugin, id);
+        this.config = config;
+        this.maxLevel = Math.max(1, Math.min(MAX_POSSIBLE_LEVEL, config.getInt("level.max", defaultMaxLevel())));
         this.item = loadItem(config);
         this.description = loadDescription(config);
         this.craftShape = loadCraftShape(config);
         this.craftIngredients = loadCraftIngredients(config);
         registerCraft(config);
+        registerUpgradeRecipes();
 
     }
 
@@ -79,6 +92,91 @@ public abstract class AbstractPerk {
     /** Caractère de la forme -> matériau. */
     public Map<Character, Material> getCraftIngredients() {
         return craftIngredients;
+    }
+
+    // ------------------------------------------------------------ NIVEAUX
+
+    /** Niveau max par défaut si "level.max" est absent du yml (surchargé par les perks à niveaux). */
+    protected int defaultMaxLevel() {
+        return 1;
+    }
+
+    public int getMaxLevel() {
+        return maxLevel;
+    }
+
+    /** Nombre de perks du niveau N nécessaires (table de craft) pour obtenir le niveau N+1. */
+    public int getUpgradeCost() {
+        return Math.max(2, Math.min(9, config.getInt("level.upgrade_cost", 2)));
+    }
+
+    /** Multiplicateur d'effet : 1 au niveau 1, puis + "level.bonus_per_level" par niveau (0.5 par défaut). */
+    public double getMultiplier(int level) {
+        double bonus = config.getDouble("level.bonus_per_level", 0.5);
+        return 1.0 + bonus * (Math.max(1, level) - 1);
+    }
+
+    /**
+     * Valeur configurable par niveau dans la section "values" du yml.
+     * Liste : [niv1, niv2, niv3] (le dernier est réutilisé au-delà). Nombre seul : même valeur partout.
+     */
+    public double getValue(String name, int level, double def) {
+        String path = "values." + name;
+        if (config.isList(path)) {
+            List<Double> list = config.getDoubleList(path);
+            if (!list.isEmpty()) {
+                return list.get(Math.max(0, Math.min(level, list.size()) - 1));
+            }
+        } else if (config.isSet(path)) {
+            return config.getDouble(path, def);
+        }
+        return def;
+    }
+
+    /** Item du perk au niveau demandé (niveau 1 = item d'origine, inchangé). */
+    public ItemStack getItem(int level) {
+        int lvl = Math.max(1, Math.min(level, maxLevel));
+        ItemStack copy = item.clone();
+        if (lvl == 1) return copy;
+        ItemMeta meta = copy.getItemMeta();
+        if (meta == null) return copy;
+        meta.getPersistentDataContainer().set(PDCBuilder.PERK_LEVEL, PersistentDataType.INTEGER, lvl);
+        meta.displayName(MiniMessage.miniMessage().deserialize("<!italic>" + displayName + " <gray>" + roman(lvl)));
+        meta.lore(List.of(MiniMessage.miniMessage().deserialize("<!italic><gray>Niveau <white>" + roman(lvl))));
+        copy.setItemMeta(meta);
+        return copy;
+    }
+
+    public static String roman(int n) {
+        return n >= 1 && n < ROMAN.length ? ROMAN[n] : String.valueOf(n);
+    }
+
+    private NamespacedKey upgradeKey(int level) {
+        return new NamespacedKey(plugin, id + "_upgrade_" + level);
+    }
+
+    private void registerUpgradeRecipes() {
+        for (int lvl = 2; lvl <= MAX_POSSIBLE_LEVEL; lvl++) {
+            Bukkit.removeRecipe(upgradeKey(lvl));
+        }
+        if (maxLevel <= 1) return;
+        int cost = getUpgradeCost();
+        for (int lvl = 1; lvl < maxLevel; lvl++) {
+            ShapelessRecipe recipe = new ShapelessRecipe(upgradeKey(lvl + 1), getItem(lvl + 1));
+            RecipeChoice.ExactChoice choice = RecipeChoice.exactChoice(getItem(lvl));
+            for (int i = 0; i < cost; i++) {
+                recipe.addIngredient(choice);
+            }
+            Bukkit.addRecipe(recipe);
+        }
+    }
+
+    /** Retire le craft du perk et ses crafts d'amélioration (utilisé par /perk reload). */
+    public void unregisterRecipes() {
+        Bukkit.removeRecipe(key);
+        for (int lvl = 2; lvl <= MAX_POSSIBLE_LEVEL; lvl++) {
+            Bukkit.removeRecipe(upgradeKey(lvl));
+        }
     }
     /*
             Fonction utilitaire pour Charger les infos
@@ -183,6 +281,11 @@ public abstract class AbstractPerk {
      */
 
     public abstract ItemStack onApply(ItemStack item);
+
+    /** Application avec niveau. Par défaut, ignore le niveau (perks sans effet à échelle). */
+    public ItemStack onApply(ItemStack item, int level) {
+        return onApply(item);
+    }
     public abstract void onRemove(Player player, ItemStack item);
 
 

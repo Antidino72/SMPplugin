@@ -18,13 +18,23 @@ public class AttackSpeedPerk extends AbstractPerk {
         super(id, plugin,config);
     }
 
+    @Override
+    protected int defaultMaxLevel() {
+        return 3;
+    }
 
     @Override
     public ItemStack onApply(ItemStack item) {
+        return onApply(item, 1);
+    }
+
+    @Override
+    public ItemStack onApply(ItemStack item, int level) {
+        double m = getMultiplier(level);
         return new ItemBuilder(item,this.plugin)
                 .addAttribute(
                         Attribute.ATTACK_SPEED,
-                        1.2,
+                        1.2 * m,
                         AttributeModifier.Operation.ADD_SCALAR,
                         EquipmentSlotGroup.MAINHAND
                 )
@@ -37,5 +47,3 @@ public class AttackSpeedPerk extends AbstractPerk {
 
     }
 }
-
-
