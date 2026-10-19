@@ -20,7 +20,6 @@ import java.util.Map;
 
 public class PerkManager {
     private final ConfigPerkManager configPerkManager;
-    private static final Logger log = LoggerFactory.getLogger(PerkManager.class);
     private static final EquipmentSlot[] ARMOR_SLOTS = {
             EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
     };

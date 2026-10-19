@@ -8,13 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ConfigPerkManager {
-    private static final Logger log = LoggerFactory.getLogger(ConfigPerkManager.class);
     CorePlugin plugin;
 
     /** Tous les fichiers de perks (dans resources/perks/ et plugins/SMPplugin/perks/). */

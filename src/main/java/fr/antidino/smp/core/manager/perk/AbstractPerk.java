@@ -52,7 +52,7 @@ public abstract class AbstractPerk {
         this.plugin = plugin;
         this.key = new NamespacedKey(plugin, id);
         this.config = config;
-        this.maxLevel = Math.max(1, Math.min(MAX_POSSIBLE_LEVEL, config.getInt("level.max", defaultMaxLevel())));
+        this.maxLevel = Math.clamp(config.getInt("level.max", defaultMaxLevel()), 1, MAX_POSSIBLE_LEVEL);
         this.item = loadItem(config);
         this.description = loadDescription(config);
         this.craftShape = loadCraftShape(config);
@@ -107,7 +107,7 @@ public abstract class AbstractPerk {
 
     /** Nombre de perks du niveau N nécessaires (table de craft) pour obtenir le niveau N+1. */
     public int getUpgradeCost() {
-        return Math.max(2, Math.min(9, config.getInt("level.upgrade_cost", 2)));
+        return Math.clamp(config.getInt("level.upgrade_cost", 2), 2, 9);
     }
 
     /** Multiplicateur d'effet : 1 au niveau 1, puis + "level.bonus_per_level" par niveau (0.5 par défaut). */
@@ -221,11 +221,7 @@ public abstract class AbstractPerk {
         Material material = Material.getMaterial(material_string);
 
         if(material == null){
-            Bukkit.getLogger().warning(configuration.getString("item.material")+ " not found");
-            return getNotFoundItem();
-        }
-        if(displayName == null){
-            Bukkit.getLogger().warning(configuration.getString("item.display_name"));
+            plugin.getLogger().warning(configuration.getString("item.material")+ " not found");
             return getNotFoundItem();
         }
         return new ItemBuilder(material,plugin).addPDC(PDCBuilder.PERK_ID,getId()).setName(MiniMessage.miniMessage().deserialize("<!italic>"+displayName)).build();

@@ -10,6 +10,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.Locale;
  */
 public class AdminCommands implements CommandExecutor, TabCompleter {
     private static final String EXPANDER_ID = "slot_expander";
-    private CorePlugin plugin;
+    private final CorePlugin plugin;
     public AdminCommands(CorePlugin plugin) {
         this.plugin = plugin;
     }
@@ -56,7 +57,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
         int count = 1;
         if (args.length >= 3) {
             try {
-                count = Math.max(1, Math.min(64, Integer.parseInt(args[2])));
+                count = Math.clamp(Integer.parseInt(args[2]), 1, 64);
             } catch (NumberFormatException e) {
                 send(sender, "<red>Nombre invalide : " + args[2]);
                 return;
@@ -98,16 +99,14 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public ArrayList<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+    public ArrayList<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NonNull [] args) {
         ArrayList<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("reload");
             completions.add("give");
         }
         if (args.length == 2 &&  args[0].equalsIgnoreCase("give")) {
-            plugin.perkManager.getPerks().forEach(perk -> {
-                completions.add(perk.getId());
-            });
+            plugin.perkManager.getPerks().forEach(perk -> completions.add(perk.getId()));
             completions.add(EXPANDER_ID);
         }
         if (args.length == 3 && args[0].equalsIgnoreCase("give")) {

@@ -31,7 +31,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 public final class CorePlugin extends JavaPlugin {
-    private static final Logger log = LoggerFactory.getLogger(CorePlugin.class);
     public PDCBuilder pdcBuilder;
     public PerkManager perkManager;
     public SlotManager slotManager;

@@ -1,7 +1,7 @@
 package fr.antidino.smp.core.manager.perk.type;
 
 public class PerkTypeId {
-    private PerkTypeId(){};
+    private PerkTypeId(){}
 
     public static final String HEALTH = "health_perk";
     public static final String SPEED = "speed_perk";

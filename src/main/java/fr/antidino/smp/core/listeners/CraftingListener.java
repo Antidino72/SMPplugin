@@ -4,22 +4,12 @@ import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.SmithingRegisterAllItem;
 import fr.antidino.smp.core.manager.SlotManager;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.UUID;
 
 public class CraftingListener implements Listener {
-    private static final Logger log = LoggerFactory.getLogger(CraftingListener.class);
-
-
-    private static final HashMap<UUID, Long> cooldowns = new HashMap<>();
 
     CorePlugin corePlugin;
     SlotManager slotManager;
@@ -56,6 +46,7 @@ public class CraftingListener implements Listener {
 
         */
         for (Material material : SmithingRegisterAllItem.getAllMaterials()) {
+            assert resultType != null;
             if (material == resultType.getType()) {
                 ItemStack item = event.getRecipe().getResult();
                 item = slotManager.initializeSlots(item);

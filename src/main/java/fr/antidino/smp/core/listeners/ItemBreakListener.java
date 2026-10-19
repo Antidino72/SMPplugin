@@ -10,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ItemBreakListener implements Listener {
-    private static final Logger log = LoggerFactory.getLogger(ItemBreakListener.class);
     CorePlugin plugin;
     public ItemBreakListener(CorePlugin plugin) {
         this.plugin = plugin;

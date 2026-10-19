@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class PlayerJoinListener implements Listener {
-    private static final Logger log = LoggerFactory.getLogger(PlayerJoinListener.class);
     CorePlugin plugin;
     public PlayerJoinListener(CorePlugin plugin) {
         this.plugin = plugin;

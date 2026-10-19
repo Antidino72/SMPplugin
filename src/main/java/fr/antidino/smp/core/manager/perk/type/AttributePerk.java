@@ -22,7 +22,7 @@ import java.util.Locale;
 /**
  * Perk entièrement piloté par le yml : une liste de modificateurs d'attributs
  * (bonus ET malus possibles, ce qui permet de faire des perks avec contrepartie).
- *
+
  * modifiers:
  *   speed:
  *     attribute: "MOVEMENT_SPEED"

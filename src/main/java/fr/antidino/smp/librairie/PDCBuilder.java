@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -85,7 +84,7 @@ public class PDCBuilder {
         List<String> perksArray = pdc.get(SLOTS, PersistentDataType.LIST.strings());
 
         if (perksArray == null) {
-            Bukkit.getLogger().warning("Perks list is null");
+            plugin.getLogger().warning("Perks list is null");
             return new ArrayList<>();
         }
 
@@ -115,7 +114,7 @@ public class PDCBuilder {
     public ItemStack updateItemLore(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
-            Bukkit.getLogger().warning("[SMPplugin] Item is null");
+            plugin.getLogger().warning("[SMPplugin] Item is null");
             return item;
         }
 

@@ -84,7 +84,7 @@ public class CodexMenu {
     public void openList(Player player, int page) {
         List<AbstractPerk> perks = getSortedPerks();
         int maxPage = Math.max(0, (perks.size() - 1) / PERKS_PER_PAGE);
-        page = Math.max(0, Math.min(page, maxPage));
+        page = Math.clamp(page, 0, maxPage);
 
         String title = "<dark_gray>Codex des perks";
         if (maxPage > 0) title += " <gray>(" + (page + 1) + "/" + (maxPage + 1) + ")";
