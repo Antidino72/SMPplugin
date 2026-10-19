@@ -1,15 +1,19 @@
 package fr.antidino.smp.core;
 
+import fr.antidino.smp.CorePlugin;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class SmithingRegisterAllItem {
-    public  SmithingRegisterAllItem(Plugin plugin) {
+    public  SmithingRegisterAllItem(CorePlugin plugin) {
         NamespacedKey key = new NamespacedKey(plugin, "custom_all_armor_smithing");
 
         ArrayList<Material> items = new ArrayList<>();
@@ -18,7 +22,11 @@ public class SmithingRegisterAllItem {
 
         RecipeChoice base = new RecipeChoice.MaterialChoice(getAllMaterials());
 
-        RecipeChoice addition = new RecipeChoice.MaterialChoice(Material.ECHO_SHARD);
+        plugin.perkManager.getPerks().forEach(perk -> {
+            items.add(perk.getItem().getType());
+        });
+
+        RecipeChoice addition = new RecipeChoice.MaterialChoice(items.stream().distinct().toList());
 
 
 

@@ -186,10 +186,10 @@ public abstract class AbstractPerk {
         return config.getString("item.display_name","<red>Display name");
     }
     private List<String> loadDescription(FileConfiguration config) {
-        return Collections.unmodifiableList(new ArrayList<>(config.getStringList("description")));
+        return List.copyOf(config.getStringList("description"));
     }
     private List<String> loadCraftShape(FileConfiguration config) {
-        return Collections.unmodifiableList(new ArrayList<>(config.getStringList("craft.shape")));
+        return List.copyOf(config.getStringList("craft.shape"));
     }
     private Map<Character, Material> loadCraftIngredients(FileConfiguration config) {
         Map<Character, Material> map = new LinkedHashMap<>();
