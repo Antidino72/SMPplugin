@@ -2,6 +2,7 @@ package fr.antidino.smp.core.manager.codex;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
+import fr.antidino.smp.librairie.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -26,7 +27,7 @@ import java.util.Map;
 public class CodexMenu {
 
     public static final int PERKS_PER_PAGE = 45;
-
+    public static final int GIVE_SLOT = 8;
     // Menu détail (27 slots) : grille de craft en colonnes 1-3
     public static final int[] CRAFT_SLOTS = {1, 2, 3, 10, 11, 12, 19, 20, 21};
     public static final int ARROW_SLOT = 13;
@@ -41,6 +42,8 @@ public class CodexMenu {
     public static final int NEXT_SLOT = 53;
 
     public static final String EXPANDER_ID = "__slot_expander__";
+
+
 
     public enum Type { LIST, DETAIL }
 
@@ -67,6 +70,8 @@ public class CodexMenu {
     }
 
     private final CorePlugin plugin;
+
+    public ItemStack result;
 
     public CodexMenu(CorePlugin plugin) {
         this.plugin = plugin;
@@ -173,6 +178,8 @@ public class CodexMenu {
     private void openRecipeView(Player player, String id, int fromPage, Component title, ItemStack result,
                                 List<String> shape, Map<Character, Material> ingredients, List<Component> description) {
         CodexHolder holder = new CodexHolder(Type.DETAIL, fromPage, id);
+
+        this.result = result;
         Inventory inv = Bukkit.createInventory(holder, 27, title);
         holder.setInventory(inv);
 
@@ -194,15 +201,18 @@ public class CodexMenu {
         inv.setItem(ARROW_SLOT, button(Material.ARROW, "<gray>→"));
         inv.setItem(RESULT_SLOT, result);
 
-        ItemStack book = new ItemStack(Material.BOOK);
-        ItemMeta meta = book.getItemMeta();
-        meta.displayName(mm("<gold>Description"));
-        meta.lore(description);
-        book.setItemMeta(meta);
+        if (player.hasPermission("smp.perks.codex.give")){
+            ItemStack give_button = new ItemBuilder(Material.BARRIER,plugin).setName(mm("<red>GIVE ITEM")).build();
+            inv.setItem(GIVE_SLOT, give_button);
+        }
+        ItemStack book =
+                new ItemBuilder(Material.BOOK,plugin)
+                .setLore(description)
+                .setName(mm("<gold>Description"))
+                .build();
+
         inv.setItem(DESCRIPTION_SLOT, book);
-
         inv.setItem(BACK_SLOT, button(Material.ARROW, "<yellow>← Retour"));
-
         player.openInventory(inv);
     }
 

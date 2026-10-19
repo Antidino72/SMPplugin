@@ -2,12 +2,15 @@ package fr.antidino.smp.core.manager.codex;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -33,35 +36,51 @@ public class CodexListener implements Listener {
         if (holder.type == CodexMenu.Type.LIST) {
             handleList(player, holder, slot);
         } else {
-            if (slot == CodexMenu.BACK_SLOT) {
-                click(player);
-                plugin.codexMenu.openList(player, holder.page);
+            switch(slot) {
+                case CodexMenu.BACK_SLOT: {
+                    click(player);
+                    plugin.codexMenu.openList(player, holder.page);
+                }
+                case CodexMenu.GIVE_SLOT: {
+                    click(player);
+                    ItemStack result = plugin.codexMenu.result;
+                    if (result == null || result.getType() == Material.AIR) return;
+                    if (result.getItemMeta() == null) return;
+                    player.getInventory().addItem(result);
+                    player.sendMessage(MiniMessage.miniMessage().deserialize("<green>You Received 1 perk"));
+                }
             }
         }
     }
 
     private void handleList(Player player, CodexMenu.CodexHolder holder, int slot) {
-        if (slot == CodexMenu.CLOSE_SLOT) {
-            player.closeInventory();
-            return;
-        }
-        if (slot == CodexMenu.PREV_SLOT && holder.page > 0) {
-            click(player);
-            plugin.codexMenu.openList(player, holder.page - 1);
-            return;
-        }
-        if (slot == CodexMenu.EXPANDER_SLOT && plugin.slotExpander != null) {
-            click(player);
-            plugin.codexMenu.openExpanderDetail(player, holder.page);
-            return;
-        }
-        if (slot == CodexMenu.NEXT_SLOT) {
-            List<AbstractPerk> perks = plugin.codexMenu.getSortedPerks();
-            if ((holder.page + 1) * CodexMenu.PERKS_PER_PAGE < perks.size()) {
-                click(player);
-                plugin.codexMenu.openList(player, holder.page + 1);
+        switch (slot) {
+            case CodexMenu.CLOSE_SLOT :{
+                player.closeInventory();
+                return;
             }
-            return;
+            case CodexMenu.PREV_SLOT: {
+                if (holder.page > 0){
+                    click(player);
+                    plugin.codexMenu.openList(player, holder.page -1 );
+                    return;
+                }
+            }
+            case CodexMenu.EXPANDER_SLOT: {
+                if ( plugin.slotExpander != null){
+                    click(player);
+                    plugin.codexMenu.openExpanderDetail(player, holder.page);
+                    return;
+                }
+            }
+            case CodexMenu.NEXT_SLOT: {
+                List<AbstractPerk> perks = plugin.codexMenu.getSortedPerks();
+                if ((holder.page + 1) * CodexMenu.PERKS_PER_PAGE < perks.size()) {
+                    click(player);
+                    plugin.codexMenu.openList(player, holder.page + 1);
+                }
+                return;
+            }
         }
         if (slot >= 0 && slot < CodexMenu.PERKS_PER_PAGE) {
             List<AbstractPerk> perks = plugin.codexMenu.getSortedPerks();

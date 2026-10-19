@@ -16,3 +16,5 @@ permissions:
   smp.perks.codex:
     description: Permet d'ouvrir le codex des perks
     default: true
+  smp.perks.codex.give :
+    description: Permet de se Give des perks depuis le codex
