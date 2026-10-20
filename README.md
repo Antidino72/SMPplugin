@@ -399,7 +399,6 @@ CREATE TABLE IF NOT EXISTS smp_player_perks (
 
 Observations relevées à la lecture du code, utiles pour la suite du développement :
 
-- **Lifesteal** : `LifeStealPerk` n'est enregistré que dans `PerkManager.reload()`, pas dans `registerDefaults()`. Le perk n'existe donc qu'après un premier `/perk reload`. `lifesteal.yml` n'est pas non plus dans `ConfigPerkManager.FILES`.
 - **Vampire** : `PerkTypeId.VAMPIRE` et le listener `onHit` existent, mais aucun `vampire.yml` ni enregistrement n'est présent : ce perk est inactif.
 - **`id:` des YAML ignoré** : les identifiants réels viennent de `PerkTypeId`.
 - **Table de forge** : la recette `SmithingTransformRecipe` réutilise le même `RecipeChoice` pour le modèle et l'ajout. À valider en jeu selon la version de Paper (comportement de la case « modèle »).

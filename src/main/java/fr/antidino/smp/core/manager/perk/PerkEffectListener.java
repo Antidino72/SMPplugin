@@ -8,6 +8,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.ArmorStand;
@@ -72,9 +73,9 @@ public class PerkEffectListener implements Listener {
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity target) || target instanceof ArmorStand) return;
 
-        int level = plugin.perkManager.getPerkLevel(player, EquipmentSlot.HAND, PerkTypeId.VAMPIRE);
+        int level = plugin.perkManager.getPerkLevel(player, EquipmentSlot.HAND, PerkTypeId.LIFESTEAL_PERK);
         if (level <= 0) return;
-        AbstractPerk perk = plugin.perkManager.getPerk(PerkTypeId.VAMPIRE);
+        AbstractPerk perk = plugin.perkManager.getPerk(PerkTypeId.LIFESTEAL_PERK);
         if (perk == null) return;
 
         double percent = perk.getValue("heal_percent", level, 0.10 * level);
@@ -84,7 +85,8 @@ public class PerkEffectListener implements Listener {
         AttributeInstance maxHealth = player.getAttribute(Attribute.MAX_HEALTH);
         double max = maxHealth == null ? 20.0 : maxHealth.getValue();
         player.setHealth(Math.min(max, player.getHealth() + heal));
-        player.getWorld().spawnParticle(Particle.HEART, player.getLocation().add(0, 1.8, 0), 2, 0.2, 0.1, 0.2, 0);
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.4F, 1);
+        player.getWorld().spawnParticle(Particle.HEART, player.getLocation().add(0, 1.8, 0), 4, 0.2, 0.1, 0.2, 0);
     }
 
     // ----------------------------------------------------------------- FONTE AUTO
@@ -144,20 +146,6 @@ public class PerkEffectListener implements Listener {
             }
         }
     }
-
-    @EventHandler
-    public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
-        if (event.getDamager() instanceof Player player) {
-            if (plugin.perkManager.hasPerk(PerkTypeId.LIFESTEAL_PERK,player, EquipmentSlot.HAND)) {
-                double amount = event.getDamage();
-                double lifesteal = amount * plugin.configPerkManager.LifeStealConfig.getDouble("amount", 5) / 100;
-                double newHealth = Math.min(player.getHealth() + lifesteal, player.getAttribute(Attribute.MAX_HEALTH).getValue());
-                player.setHealth(newHealth);
-            }
-        }
-    }
-
     private boolean isOre(Material material) {
         return material.name().endsWith("_ORE") || material == Material.ANCIENT_DEBRIS;
     }

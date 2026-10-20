@@ -12,7 +12,6 @@ public class PerkTypeId {
     public static final String WARDEN_PERK = "warden_perk";
     public static final String DOUBLE_JUMP = "double_jump_perk";
     public static final String NIGHT_VISION = "night_vision_perk";
-    public static final String VAMPIRE = "vampire_perk";
     public static final String MAGNET = "magnet_perk";
     public static final String SMELTER = "smelter_perk";
     public static final String MINER = "miner_perk";

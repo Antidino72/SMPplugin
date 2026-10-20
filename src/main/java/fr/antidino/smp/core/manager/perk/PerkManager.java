@@ -44,6 +44,7 @@ public class PerkManager {
         registerPerk(new PassivePerk(PerkTypeId.NIGHT_VISION, plugin, configPerkManager.get("night_vision.yml")));
         registerPerk(new PassivePerk(PerkTypeId.MAGNET, plugin, configPerkManager.get("magnet.yml")));
         registerPerk(new PassivePerk(PerkTypeId.SMELTER, plugin, configPerkManager.get("smelter.yml")));
+        registerPerk(new PassivePerk(PerkTypeId.LIFESTEAL_PERK,plugin,configPerkManager.LifeStealConfig));
 
         // Perks pilotés par une liste de modificateurs d'attributs dans le yml (bonus + malus)
         registerPerk(new AttributePerk(PerkTypeId.SPEED,plugin,configPerkManager.SpeedConfig));
@@ -61,7 +62,7 @@ public class PerkManager {
         registeredPerks.values().forEach(AbstractPerk::unregisterRecipes);
         registeredPerks.clear();
         registerDefaults();
-        registerPerk(new LifeStealPerk(PerkTypeId.LIFESTEAL_PERK,plugin,configPerkManager.LifeStealConfig));
+
     }
 
     public void registerPerk(AbstractPerk perk) {

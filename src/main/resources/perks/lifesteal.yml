@@ -10,5 +10,6 @@ craft :
   ingredient :
     X : DIAMOND_BLOCK
     C : APPLE
-# pourcentage
-amount : 2.0
+
+values :
+  heal_percent : [3, 6, 10]
