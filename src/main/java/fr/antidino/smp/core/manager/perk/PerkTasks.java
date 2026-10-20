@@ -1,7 +1,7 @@
 package fr.antidino.smp.core.manager.perk;
 
 import fr.antidino.smp.CorePlugin;
-import fr.antidino.smp.core.manager.perk.type.PerkTypeId;
+import fr.antidino.smp.core.manager.perk.config.PerkTypeId;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

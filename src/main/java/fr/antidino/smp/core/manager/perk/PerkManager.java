@@ -2,6 +2,7 @@ package fr.antidino.smp.core.manager.perk;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.config.ConfigPerkManager;
+import fr.antidino.smp.core.manager.perk.config.PerkTypeId;
 import fr.antidino.smp.core.manager.perk.type.*;
 import fr.antidino.smp.librairie.PDCBuilder;
 import org.bukkit.NamespacedKey;
@@ -10,8 +11,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +28,6 @@ public class PerkManager {
 
     public PerkManager(CorePlugin plugin) {
         this.plugin = plugin;
-        plugin.getServer().getPluginManager().registerEvents(new PerkListenner(plugin),plugin);
         registerDefaults();
         configPerkManager = plugin.configPerkManager;
     }
@@ -37,11 +35,7 @@ public class PerkManager {
     private void registerDefaults() {
 
         ConfigPerkManager configPerkManager = plugin.configPerkManager;
-        registerPerk(new HealthPerk(PerkTypeId.HEALTH,plugin,configPerkManager.healthConfig));
-        registerPerk(new ArmorPerk(PerkTypeId.ARMOR,plugin,configPerkManager.ArmorConfig));
-        registerPerk(new SpeedPerk(PerkTypeId.SPEED,plugin,configPerkManager.SpeedConfig));
-        registerPerk(new AttackSpeedPerk(PerkTypeId.ATTACK_SPEED,plugin,configPerkManager.AttackSpeedConfig));
-        registerPerk(new AttackDamagePerk(PerkTypeId.ATTACK_DAMAGE,plugin,configPerkManager.AttackDamageConfig));
+
         registerPerk(new NoFallPerk(PerkTypeId.NO_FALL_PERK,plugin,configPerkManager.NoFallConfig));
         registerPerk(new WardenPerk(PerkTypeId.WARDEN_PERK,plugin,configPerkManager.WardenConfig));
 
@@ -52,6 +46,11 @@ public class PerkManager {
         registerPerk(new PassivePerk(PerkTypeId.SMELTER, plugin, configPerkManager.get("smelter.yml")));
 
         // Perks pilotés par une liste de modificateurs d'attributs dans le yml (bonus + malus)
+        registerPerk(new AttributePerk(PerkTypeId.SPEED,plugin,configPerkManager.SpeedConfig));
+        registerPerk(new AttributePerk(PerkTypeId.ATTACK_SPEED,plugin,configPerkManager.AttackSpeedConfig));
+        registerPerk(new AttributePerk(PerkTypeId.ATTACK_DAMAGE,plugin,configPerkManager.AttackDamageConfig));
+        registerPerk(new AttributePerk(PerkTypeId.ARMOR,plugin,configPerkManager.get("armor.yml")));
+        registerPerk(new AttributePerk(PerkTypeId.HEALTH,plugin,configPerkManager.healthConfig));
         registerPerk(new AttributePerk(PerkTypeId.MINER, plugin, configPerkManager.get("miner.yml")));
         registerPerk(new AttributePerk(PerkTypeId.SPRINTER, plugin, configPerkManager.get("sprinter.yml")));
         registerPerk(new AttributePerk(PerkTypeId.GLASS_CANNON, plugin, configPerkManager.get("glass_cannon.yml")));

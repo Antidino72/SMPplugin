@@ -1,7 +1,10 @@
 package fr.antidino.smp.core.manager.perk;
 
 import fr.antidino.smp.CorePlugin;
-import fr.antidino.smp.core.manager.perk.type.PerkTypeId;
+import fr.antidino.smp.core.manager.CooldownManager;
+import fr.antidino.smp.core.manager.perk.config.PerkTypeId;
+import fr.antidino.smp.core.manager.perk.type.WardenPerk;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -16,6 +19,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -33,6 +38,7 @@ public class PerkEffectListener implements Listener {
     private final CorePlugin plugin;
 
     private record Smelt(ItemStack result, float xp) {}
+    private final CooldownManager cooldownManager = new CooldownManager();
     private final Map<Material, Optional<Smelt>> smeltCache = new HashMap<>();
 
     public PerkEffectListener(CorePlugin plugin) {
@@ -95,7 +101,7 @@ public class PerkEffectListener implements Listener {
             // Si le minerai tombe tel quel (Toucher de soie), on ne le fond pas
             if (isOre(stack.getType())) continue;
 
-            Optional<Smelt> smelt = smeltCache.computeIfAbsent(stack.getType(), m -> Optional.ofNullable(findSmelt(stack)));
+            Optional<Smelt> smelt = smeltCache.computeIfAbsent(stack.getType(), _ -> Optional.ofNullable(findSmelt(stack)));
             if (smelt.isEmpty()) continue;
 
             ItemStack result = smelt.get().result().clone();
@@ -109,6 +115,46 @@ public class PerkEffectListener implements Listener {
         if (smelted) {
             event.getBlock().getWorld().spawnParticle(Particle.FLAME,
                     event.getBlock().getLocation().add(0.5, 0.5, 0.5), 6, 0.2, 0.2, 0.2, 0.01);
+        }
+    }
+    @EventHandler
+    public void onDamage(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            if (!(event.getEntity() instanceof Player player)) return;
+            if (plugin.perkManager.hasPerk(PerkTypeId.NO_FALL_PERK,player, EquipmentSlot.FEET)) event.setCancelled(true);
+        }
+    }
+    @EventHandler
+    public void onItemUse(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (plugin.perkManager.hasPerk(PerkTypeId.WARDEN_PERK,player, EquipmentSlot.CHEST)) {
+            if (cooldownManager.hasCooldown(player.getUniqueId())) {
+                int remaining = cooldownManager.getRemainingSeconds(player.getUniqueId());
+                String message = plugin.configPerkManager.WardenConfig.getString("cooldown-message",
+                                "Tu dois attendre encore %time%s avant de réutiliser cette capacité !")
+                        .replace("%time%", String.valueOf(remaining));
+                player.sendMessage(MiniMessage.miniMessage().deserialize(message));
+                return;
+            }
+            ItemStack item = player.getInventory().getItemInMainHand();
+            if(player.isSneaking() && item.getType() == Material.AIR && item.isEmpty()) {
+                WardenPerk.triggerSonicBoom(player);
+                cooldownManager.setCooldown(player.getUniqueId(), plugin.configPerkManager.WardenConfig.getInt("cooldown",5));
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDamage(EntityDamageByEntityEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;
+        if (event.getDamager() instanceof Player player) {
+            if (plugin.perkManager.hasPerk(PerkTypeId.LIFESTEAL_PERK,player, EquipmentSlot.HAND)) {
+                double amount = event.getDamage();
+                double lifesteal = amount * plugin.configPerkManager.LifeStealConfig.getDouble("amount", 5) / 100;
+                double newHealth = Math.min(player.getHealth() + lifesteal, player.getAttribute(Attribute.MAX_HEALTH).getValue());
+                player.setHealth(newHealth);
+            }
         }
     }
 

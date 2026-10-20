@@ -1,4 +1,4 @@
-package fr.antidino.smp.core.manager.perk.type;
+package fr.antidino.smp.core.manager.perk.config;
 
 public class PerkTypeId {
     private PerkTypeId(){}

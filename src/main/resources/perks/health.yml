@@ -1,7 +1,7 @@
-id : "health"
+id : "sprinter"
 item:
-  material : REDSTONE
-  display_name : "<red>Health Boost<red>"
+  material : "SUGAR"
+  display_name : "<green>Sprinter"
 craft :
   shape :
     - "XXX"
@@ -11,14 +11,20 @@ craft :
     X : DIAMOND_BLOCK
     C : APPLE
 
-attribute:
-  1 :
-    type: "GENERIC_MAX_HEALTH"
-    amount: 4.0
-    operation: "ADD_NUMBER"
-    slot-group: "ARMOR"
+level:
+  max: 3
+  upgrade_cost: 2
 
-# Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
+
+modifiers:
+  health:
+    attribute: "MAX_HEALTH"
+    amount: 2.0
+    amount_per_level: 1.0
+    operation: "ADD_NUMBER"
+    slot_group: "HEAD"
+
 description:
-  - "<gray>Augmente votre <red>vie maximale</red>"
-  - "<gray>quand l'équipement est porté."
+  - "<green>+ vitesse de déplacement</green>"
+  - "<red>- vie maximale</red>"
+  - "<gray>(à appliquer sur des bottes)."

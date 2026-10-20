@@ -11,12 +11,20 @@ craft :
     X: "DIAMOND_BLOCK"
     C: "ANCIENT_DEBRIS"
     B: "DIAMOND_SWORD"
-attribute:
-  1 :
-    type: "GENERIC_MAX_HEALTH"
-    amount: 4.0
+
+
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+
+modifiers:
+  attack_speed:
+    attribute: "ATTACK_SPEED"
+    amount: 1.1
     operation: "ADD_NUMBER"
-    slot-group: "ARMOR"
+    slot-group: "MAINHAND"
 
 # Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
 description:

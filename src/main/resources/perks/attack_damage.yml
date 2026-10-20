@@ -11,12 +11,18 @@ craft :
     X: "DIAMOND_BLOCK"
     C: "COPPER_INGOT"
     B: "DIAMOND_SWORD"
-attribute:
-  1 :
-    type: "GENERIC_MAX_HEALTH"
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+
+modifiers:
+  attack_damage:
+    attribute: "ATTACK_DAMAGE"
     amount: 4.0
     operation: "ADD_NUMBER"
-    slot-group: "ARMOR"
+    slot-group: "MAINHAND"
 
 # Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
 description:

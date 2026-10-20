@@ -53,7 +53,7 @@ public class PDCBuilder {
 
 
 
-        int maxSlots = ThreadLocalRandom.current().nextInt(plugin.getConfig().getInt("slot.min"), plugin.getConfig().getInt("slot.max"));
+        int maxSlots = ThreadLocalRandom.current().nextInt(plugin.getConfig().getInt("slot.min"), plugin.getConfig().getInt("slot.max")+1);
         pdc.set(SLOTS,PersistentDataType.LIST.strings(),new ArrayList<>());
         pdc.set(MAX_SLOTS, PersistentDataType.INTEGER, maxSlots);
         pdc.set(USED_SLOTS, PersistentDataType.INTEGER, 0);

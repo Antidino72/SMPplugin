@@ -11,12 +11,25 @@ craft :
     X: "DIAMOND_BLOCK"
     C: "GLOWSTONE_DUST"
     B: "DIAMOND_BOOTS"
-attribute:
-  1 :
-    type: "GENERIC_MAX_HEALTH"
-    amount: 4.0
-    operation: "ADD_NUMBER"
-    slot-group: "ARMOR"
+
+
+level:
+  max: 3
+  upgrade_cost: 2
+
+# Perk piloté par attributs : attribute / amount / amount_per_level / operation / slot_group
+modifiers:
+  speed:
+    attribute: "MOVEMENT_SPEED"
+    amount: 1.1
+    amount_per_level: 0.1
+    operation: "ADD_SCALAR"
+    slot_group: "MAINHAND"
+  sneak :
+    attribute : "SNEAKING_SPEED"
+    amount : 2
+    amount_per_level: 1
+    slot_group : "FEET"
 
 # Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
 description:

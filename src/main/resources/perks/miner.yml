@@ -21,7 +21,7 @@ modifiers:
   efficiency:
     attribute: "MINING_EFFICIENCY"
     amount: 4.0
-    amount_per_level: 4.0
+    amount_per_level: 5.0
     operation: "ADD_NUMBER"
     slot_group: "MAINHAND"
 

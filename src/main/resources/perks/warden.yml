@@ -12,6 +12,6 @@ craft :
     E : "ECHO_SHARD"
     X: "SCULK"
     C: "SCULK_CATALYST"
-    D: "DIAMOND_BLOCKS"
+    D: "DIAMOND_BLOCK"
 cooldown : 30
 cooldown-message : "<red>Tu dois attendre encore %time%s avant de réutiliser La Capacité du Warden !"

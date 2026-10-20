@@ -11,12 +11,15 @@ craft :
     X : DIAMOND_BLOCK
     C : DIAMOND_CHESTPLATE
 
-attribute:
-  1 :
-    type: "GENERIC_MAX_HEALTH"
+modifiers:
+  armor:
+    attribute: "ARMOR"
     amount: 4.0
+    amount_per_level: 2.0
     operation: "ADD_NUMBER"
-    slot-group: "ARMOR"
+    slot_group: "MAINHAND"
+  armor_toughness:
+    attribute : "ARMOR_TOUGHNESS"
 
 # Description affichée dans /perks codex (une ligne par entrée, format MiniMessage)
 description:

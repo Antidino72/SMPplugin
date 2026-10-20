@@ -401,14 +401,9 @@ Observations relevées à la lecture du code, utiles pour la suite du développe
 
 - **Lifesteal** : `LifeStealPerk` n'est enregistré que dans `PerkManager.reload()`, pas dans `registerDefaults()`. Le perk n'existe donc qu'après un premier `/perk reload`. `lifesteal.yml` n'est pas non plus dans `ConfigPerkManager.FILES`.
 - **Vampire** : `PerkTypeId.VAMPIRE` et le listener `onHit` existent, mais aucun `vampire.yml` ni enregistrement n'est présent : ce perk est inactif.
-- **Attributs hardcodés** : `AttackDamagePerk` (et vraisemblablement les autres perks historiques) définit ses valeurs dans le code. La section `attribute:` des YAML `armor`, `health`, `speed`, `attack_damage`, `attack_speed` et `nofall` n'est pas lue (et contient la même valeur copiée-collée `GENERIC_MAX_HEALTH +4`). Seuls `miner`, `sprinter` et `glass_cannon` utilisent la section `modifiers:`.
 - **`id:` des YAML ignoré** : les identifiants réels viennent de `PerkTypeId`.
-- **`warden.yml`** : l'ingrédient `D: "DIAMOND_BLOCKS"` est invalide (`DIAMOND_BLOCK`). Le cooldown du YAML est 30 s alors que la valeur par défaut dans le code est 5 s.
-- **Tirage de slots** : `ThreadLocalRandom.nextInt(min, max)` a une borne haute exclue. Avec `min: 1` et `max: 3`, un équipement reçoit 1 ou 2 slots, jamais 3.
-- **Logs bruyants** : `PerkListenner.onDamage` écrit un `log.info` à chaque coup entre entités.
 - **Table de forge** : la recette `SmithingTransformRecipe` réutilise le même `RecipeChoice` pour le modèle et l'ajout. À valider en jeu selon la version de Paper (comportement de la case « modèle »).
 - **`reload()`** : `PerkManager.reload()` appelle `registerDefaults()` puis enregistre le lifesteal à part ; penser à unifier.
-- **Déploiement** : `.gitignore` référence un `copyjar.js` (script de copie du JAR) qui n'est pas versionné.
 
 ---
 
