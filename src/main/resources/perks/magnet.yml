@@ -3,6 +3,7 @@ item:
   material : "COMPASS"
   display_name : "<gray>Magnet"
 craft :
+  number : -1
   shape :
     - "IEI"
     - "DCD"

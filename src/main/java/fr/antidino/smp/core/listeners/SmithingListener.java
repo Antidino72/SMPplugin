@@ -28,7 +28,7 @@ public class SmithingListener implements Listener {
         if (mineralMeta == null) return;
         PersistentDataContainer pdc = mineralMeta.getPersistentDataContainer();
 
-        // Item d'extension de slots : équipement + item en forge => +1 emplacement
+
         if (pdc.has(PDCBuilder.SLOT_EXPANDER, PersistentDataType.STRING)) {
             applyExpander(event, equip);
             return;
@@ -40,6 +40,7 @@ public class SmithingListener implements Listener {
         if (perk == null) return;
         int level = Math.min(plugin.pdcBuilder.getPerkLevel(mineral), perk.getMaxLevel());
         apply_perk(event,equip,perk_id,level);
+
     }
     private void apply_perk(PrepareSmithingEvent event,ItemStack equip ,String perk_id,int level){
         ItemStack resultItem = equip.clone();

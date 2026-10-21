@@ -3,6 +3,7 @@ item:
   material : GOLD_INGOT
   display_name : "<gray>Armor Boost<gray>"
 craft :
+  number : -1
   shape :
     - "XXX"
     - "XCC"

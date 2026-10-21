@@ -3,6 +3,7 @@ item:
   material : "LAPIS_LAZULI"
   display_name : "<aqua>Speed Boost"
 craft :
+  number : -1
   shape :
     - "XCX"
     - "CBC"

@@ -3,6 +3,7 @@ item:
   material : "AMETHYST_SHARD"
   display_name : "<red>Attack Speed Boost"
 craft :
+  number : -1
   shape :
     - "XCX"
     - "CBC"

@@ -3,6 +3,7 @@ item:
   material : "FIRE_CHARGE"
   display_name : "<red>Glass Cannon"
 craft :
+  number : -1
   shape :
     - "BGB"
     - "DTD"

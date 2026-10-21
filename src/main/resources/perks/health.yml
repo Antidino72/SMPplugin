@@ -3,6 +3,7 @@ item:
   material : "SUGAR"
   display_name : "<green>Sprinter"
 craft :
+  number : -1
   shape :
     - "XXX"
     - "CCC"

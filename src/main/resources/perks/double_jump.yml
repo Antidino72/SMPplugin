@@ -3,6 +3,7 @@ item:
   material : "FEATHER"
   display_name : "<white>Double Jump"
 craft :
+  number : 30
   shape :
     - "XPX"
     - "DED"

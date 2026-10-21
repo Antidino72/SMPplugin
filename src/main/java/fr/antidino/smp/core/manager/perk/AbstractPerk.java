@@ -115,7 +115,13 @@ public abstract class AbstractPerk {
         double bonus = config.getDouble("level.bonus_per_level", 0.5);
         return 1.0 + bonus * (Math.max(1, level) - 1);
     }
+    /*
+        Get Number of craft in world
+     */
+    public int getMaxPossibleCraft() {
+        return config.getInt("craft.number");
 
+    }
     /**
      * Valeur configurable par niveau dans la section "values" du yml.
      * Liste : [niv1, niv2, niv3] (le dernier est réutilisé au-delà). Nombre seul : même valeur partout.

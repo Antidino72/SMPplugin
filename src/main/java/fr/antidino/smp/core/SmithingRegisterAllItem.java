@@ -42,14 +42,14 @@ public class SmithingRegisterAllItem {
 
             String name = mat.name();
 
-            // Catégorie Armures
+
             if (name.endsWith("_HELMET") ||
                     name.endsWith("_CHESTPLATE") ||
                     name.endsWith("_LEGGINGS") ||
                     name.endsWith("_BOOTS")) {
                 armors.add(mat);
             }
-            // Catégorie Outils & Armes
+
             else if (name.endsWith("_SWORD") ||
                     name.endsWith("_AXE") ||
                     name.endsWith("_PICKAXE") ||
@@ -59,14 +59,14 @@ public class SmithingRegisterAllItem {
             }
         }
 
-        // Remplissage de la Map des catégories
+
         categories.put("Armures", armors);
         categories.put("Outils & Armes", toolsAndWeapons);
 
         return categories;
     }
 
-    // Si tu as toujours besoin d'une liste plate globale (pour tes anciens checks par exemple)
+
     public static List<Material> getAllMaterials() {
         List<Material> allItems = new ArrayList<>();
         getCategorizedMaterials().values().forEach(allItems::addAll);

@@ -22,6 +22,10 @@ public class DatabaseProvider {
     private static final String INSERT_PERK_CRAFT_SQL = """
         INSERT INTO smp_player_perks (uuid, perk_id, created_at) VALUES (?, ?, ?);
     """;
+
+    private static String GET_PERK_CRAFT_SQL = """
+            SELECT * FROM smp_player_perks WHERE perk_id=?
+    """;
     public DatabaseProvider(CorePlugin plugin) {
         this.plugin = plugin;
     }
@@ -47,7 +51,6 @@ public class DatabaseProvider {
             log.info(" Error as {}", String.valueOf(e));
         }
     }
-
     public void InsertPerkCraftSQL(String perk_id,String uuid){
         try (Connection conn = plugin.getConnexion();
              PreparedStatement ps = conn.prepareStatement(INSERT_PERK_CRAFT_SQL)) {
@@ -59,4 +62,20 @@ public class DatabaseProvider {
             log.info(" Error as {}", String.valueOf(e));
         }
     }
+
+    public int NumberOfPerkCrafted(String perk_id){
+        try (Connection connection = plugin.getConnexion()){
+            PreparedStatement ps = connection.prepareStatement(GET_PERK_CRAFT_SQL);
+            ps.setString(1, perk_id);
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while (rs.next()) {
+                count++;
+            }
+            return count;
+        }catch (SQLException e){
+            log.info(" Error as {}", String.valueOf(e));
+        }
+        return 3;
+    };
 }

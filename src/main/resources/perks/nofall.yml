@@ -3,6 +3,7 @@ item:
   material : REDSTONE
   display_name : "<red>NoFall Perk<red>"
 craft :
+  number : -1
   shape :
     - "XXX"
     - "BCB"

@@ -3,6 +3,7 @@ item:
   material : "ECHO_SHARD"
   display_name : "<aqua>Warden Boost"
 craft :
+  number : 1
   shape :
     - "XSX"
     - "DED"

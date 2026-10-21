@@ -3,6 +3,7 @@ item:
   material : "SPIDER_EYE"
   display_name : "<dark_aqua>Night Vision"
 craft :
+  number : -1
   shape :
     - "XDX"
     - "DED"

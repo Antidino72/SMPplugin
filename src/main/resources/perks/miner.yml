@@ -3,6 +3,7 @@ item:
   material : "FLINT"
   display_name : "<yellow>Miner"
 craft :
+  number : -1
   shape :
     - "GDG"
     - "DPD"

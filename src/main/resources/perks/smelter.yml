@@ -3,6 +3,7 @@ item:
   material : "BLAZE_POWDER"
   display_name : "<gold>Smelter"
 craft :
+  number : -1
   shape :
     - "RMR"
     - "DFD"

@@ -9,6 +9,29 @@ Plugin **Paper** pour serveur SMP qui ajoute un système de **perks** : des item
 
 ---
 
+<div align="center">
+  <a href="#codex-main">
+    <img src="./docs/screenshoot/codex-main.png" width="40%" alt="Menu Codex Principal">
+  </a>
+  <a href="#codex-craft">
+    <img src="./docs/screenshoot/codex-craft.png" width="40%" alt="Interface de Craft">
+  </a>
+  <br>
+  <sub><b>Menu Principal</b> &nbsp;&bull;&nbsp; <b>Interface de Craft</b></sub>
+</div>
+
+<br>
+
+<div align="center">
+  <a href="#lore">
+    <img src="./docs/screenshoot/lore.png" width="40%" alt="Aperçu des Lores">
+  </a>
+  <a href="#description">
+    <img src="./docs/screenshoot/description.png" width="40%" alt="Description de l'Item">
+  </a>
+  <br>
+  <sub><b>Affichage du Lore</b> &nbsp;&bull;&nbsp; <b>Description de l'Item</b></sub>
+</div>
 ## Sommaire
 
 1. [Fonctionnalités](#fonctionnalités)

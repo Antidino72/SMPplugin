@@ -3,6 +3,7 @@ item:
   material : REDSTONE
   display_name : "<red>LifeSteal Boost<red>"
 craft :
+  number : -1
   shape :
     - "XCX"
     - "CCC"
@@ -12,4 +13,4 @@ craft :
     C : APPLE
 
 values :
-  heal_percent : [3, 6, 10]
+  heal_percent : [10, 26, 40]
