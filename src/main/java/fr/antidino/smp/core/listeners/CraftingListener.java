@@ -46,11 +46,9 @@ public class CraftingListener implements Listener {
         if (id == null) return;
         int number_of_perk = plugin.databaseProvider.NumberOfPerkCrafted(id);
         AbstractPerk perk = plugin.perkManager.getPerk(id);
-        log.info("Crafting perk " + id + " " + number_of_perk);
-        log.info("Crafting perk " + id + " " + perk.getMaxPossibleCraft());
         if (perk.getMaxPossibleCraft() <= number_of_perk && perk.getMaxPossibleCraft() != -1) {
             event.setCancelled(true);
-            player.sendMessage("<red> You can't craft this item!");
+            player.sendMessage(mm.deserialize("<red> You can't craft this item!"));
         }
         
         if (!event.isCancelled()) {
