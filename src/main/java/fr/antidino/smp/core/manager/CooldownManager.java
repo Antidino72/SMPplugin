@@ -7,13 +7,13 @@ import java.util.UUID;
 public class CooldownManager {
 
 
-    private final Map<UUID, Long> cooldowns = new HashMap<>();
+    private final Map<UUID, Double> cooldowns = new HashMap<>();
 
     /**
      * Applique un cooldown à un joueur pour une durée donnée en secondes.
      */
-    public void setCooldown(UUID playerId, int seconds) {
-        long expireTime = System.currentTimeMillis() + (seconds * 1000L);
+    public void setCooldown(UUID playerId, double seconds) {
+        Double expireTime = System.currentTimeMillis() + (seconds * 1000.0);
         cooldowns.put(playerId, expireTime);
     }
 
@@ -26,7 +26,7 @@ public class CooldownManager {
             return false;
         }
 
-        long expireTime = cooldowns.get(playerId);
+        Double expireTime = cooldowns.get(playerId);
         if (System.currentTimeMillis() >= expireTime) {
             cooldowns.remove(playerId);
             return false;
@@ -41,7 +41,7 @@ public class CooldownManager {
     public int getRemainingSeconds(UUID playerId) {
         if (!cooldowns.containsKey(playerId)) return 0;
 
-        long timeLeft = cooldowns.get(playerId) - System.currentTimeMillis();
+        double timeLeft = cooldowns.get(playerId) - System.currentTimeMillis();
         return timeLeft > 0 ? (int) (timeLeft / 1000) : 0;
     }
 }

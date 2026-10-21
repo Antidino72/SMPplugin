@@ -3,6 +3,8 @@ package fr.antidino.smp.core.manager.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.bukkit.plugin.Plugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,7 @@ import java.sql.Statement;
 
 public class DatabaseManager {
 
+    private static final Logger log = LoggerFactory.getLogger(DatabaseManager.class);
     private final Plugin plugin;
     private HikariDataSource dataSource;
 
@@ -31,7 +34,7 @@ public class DatabaseManager {
                 dbFile.createNewFile();
             } catch (IOException e) {
                 plugin.getLogger().severe("Impossible de créer le fichier de base de données !");
-                e.printStackTrace();
+                log.info(" Error as {}", String.valueOf(e));
             }
         }
 
@@ -74,7 +77,7 @@ public class DatabaseManager {
             stmt.execute(perksTable);
             plugin.getLogger().info("Tables de la base de données initialisées avec succès !");
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(" Error as {}", String.valueOf(e));
         }
     }
 

@@ -258,10 +258,10 @@ public abstract class AbstractPerk {
                     if (material != null) {
                         recipe.setIngredient(c, material);
                     }else {
-                        log.info("Material " + materialName + " not found");
+                        log.info("Material {} not found", materialName);
                     }
                 }else {
-                    log.info("MaterialName " + keyChar + " not found");
+                    log.info("MaterialName {} not found", keyChar);
                 }
             }
         }else {

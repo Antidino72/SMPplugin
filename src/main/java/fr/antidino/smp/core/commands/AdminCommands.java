@@ -1,14 +1,21 @@
 package fr.antidino.smp.core.commands;
 
 import fr.antidino.smp.CorePlugin;
+import fr.antidino.smp.core.SmithingRegisterAllItem;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
+import fr.antidino.smp.librairie.ChatUtil;
+import fr.antidino.smp.librairie.PDCBuilder;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -34,6 +41,8 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
             return true;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "slot" -> slot(sender, args);
+
             case "reload" -> {
                 int count = plugin.fullReload();
                 send(sender, "<green>Config rechargée : <white>" + count + " <green>perks, crafts et item de slots mis à jour.");
@@ -43,7 +52,77 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
         }
         return true;
     }
+    private void slot(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            send(sender, "<yellow><b>Usage : <b/>/perk slot [argument]");
+            return;
+        }
+        switch (args[1].toLowerCase(Locale.ROOT)) {
+            case "init" -> {
+                if (!(sender instanceof Player player)) {
+                    send(sender, "<red>Only players can execute this command.");
+                    break;
+                }
+                ItemStack item = player.getInventory().getItemInMainHand();
+                if (item.getType() == Material.AIR) {
+                    send(sender, "<red>You must have an item in your hand!");
+                    break;
+                }
+                if (!SmithingRegisterAllItem.getAllMaterials().contains(item.getType())) {
+                    Component message = ChatUtil.createHoverableMaterialList();
+                    sender.sendMessage(message);
+                    break;
+                }
+                ItemStack updatedItem = plugin.pdcBuilder.initializeSlots(item);
+                player.getInventory().setItemInMainHand(updatedItem);
+                send(sender, "<green>Item successfully initialized!");
+            }
+            case "apply" -> {
+                if (!(sender instanceof Player player)) {
+                    send(sender, "<red>Only players can execute this command.");
+                    break;
+                }
 
+                ItemStack perk = player.getInventory().getItemInMainHand();
+                ItemStack appliedItem = player.getInventory().getItemInOffHand();
+
+
+                if (appliedItem.getType() == Material.AIR || perk.getType() == Material.AIR) {
+                    send(sender, "<red>You must hold a perk in your main hand and an item in your off-hand!");
+                    break;
+                }
+
+
+                if (!SmithingRegisterAllItem.getAllMaterials().contains(appliedItem.getType())) {
+                    Component message = ChatUtil.createHoverableMaterialList();
+                    sender.sendMessage(message);
+                    break;
+                }
+
+
+                ItemMeta perkMeta = perk.getItemMeta();
+                if (perkMeta == null || !perkMeta.getPersistentDataContainer().has(PDCBuilder.PERK_ID, PersistentDataType.STRING)) {
+                    send(sender, "<red>The item in your main hand is not a valid perk!");
+                    break;
+                }
+
+                String perkId = perkMeta.getPersistentDataContainer().get(PDCBuilder.PERK_ID, PersistentDataType.STRING);
+
+
+                ItemStack updatedItem = plugin.pdcBuilder.addPerkToItem(appliedItem, perkId);
+                player.getInventory().setItemInOffHand(updatedItem);
+
+
+                if (perk.getAmount() > 1) {
+                    perk.setAmount(perk.getAmount() - 1);
+                } else {
+                    player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
+                }
+
+                send(sender, "<green>Perk successfully applied!");
+            }
+        }
+    }
     private void give(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
             send(sender, "<red>Commande réservée aux joueurs.");
@@ -104,6 +183,11 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             completions.add("reload");
             completions.add("give");
+            completions.add("slot");
+        }
+        if (args.length == 2 && args[0].equalsIgnoreCase("slot")) {
+            completions.add("init");
+            completions.add("apply");
         }
         if (args.length == 2 &&  args[0].equalsIgnoreCase("give")) {
             plugin.perkManager.getPerks().forEach(perk -> completions.add(perk.getId()));

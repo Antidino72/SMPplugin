@@ -9,14 +9,13 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.List;
 
 public class ItemBuilder {
     private final ItemStack item;
-    private CorePlugin plugin;
+    private final CorePlugin plugin;
     public ItemBuilder(Material material, CorePlugin plugin) {
 
         this.item = new ItemStack(material);

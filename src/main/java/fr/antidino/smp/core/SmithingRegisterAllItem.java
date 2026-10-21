@@ -7,8 +7,12 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.*;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class SmithingRegisterAllItem {
-    public  SmithingRegisterAllItem(CorePlugin plugin) {
+    public static void RegisterAllItem(CorePlugin plugin) {
         NamespacedKey key = new NamespacedKey(plugin, "custom_all_armor_smithing");
 
         ArrayList<Material> items = new ArrayList<>();
@@ -27,27 +31,46 @@ public class SmithingRegisterAllItem {
         SmithingRecipe recipe = new SmithingTransformRecipe(key, result, addition, base, addition);
         plugin.getServer().addRecipe(recipe);
     }
-    public static ArrayList<Material> getAllMaterials(){
-        ArrayList<Material> allArmorsList = new ArrayList<>();
+    public static Map<String, List<Material>> getCategorizedMaterials() {
+        Map<String, List<Material>> categories = new LinkedHashMap<>();
+
+        List<Material> armors = new ArrayList<>();
+        List<Material> toolsAndWeapons = new ArrayList<>();
+
         for (Material mat : Material.values()) {
-            if (mat.isItem()) {
-                String name = mat.name();
-                if (name.endsWith("_HELMET") ||
-                        name.endsWith("_CHESTPLATE") ||
-                        name.endsWith("_LEGGINGS") ||
-                        name.endsWith("_BOOTS") ||
-                        name.endsWith("_SWORD") ||
-                        name.endsWith("_AXE") ||
-                        name.endsWith("_PICKAXE") ||
-                        name.endsWith("_SHOVEL")  ||
-                        name.endsWith("SHIELD")
-                ) {
+            if (!mat.isItem()) continue;
 
+            String name = mat.name();
 
-                    allArmorsList.add(mat);
-                }
+            // Catégorie Armures
+            if (name.endsWith("_HELMET") ||
+                    name.endsWith("_CHESTPLATE") ||
+                    name.endsWith("_LEGGINGS") ||
+                    name.endsWith("_BOOTS")) {
+                armors.add(mat);
+            }
+            // Catégorie Outils & Armes
+            else if (name.endsWith("_SWORD") ||
+                    name.endsWith("_AXE") ||
+                    name.endsWith("_PICKAXE") ||
+                    name.endsWith("_SHOVEL") ||
+                    name.endsWith("SHIELD")) {
+                toolsAndWeapons.add(mat);
             }
         }
-        return allArmorsList;
+
+        // Remplissage de la Map des catégories
+        categories.put("Armures", armors);
+        categories.put("Outils & Armes", toolsAndWeapons);
+
+        return categories;
+    }
+
+    // Si tu as toujours besoin d'une liste plate globale (pour tes anciens checks par exemple)
+    public static List<Material> getAllMaterials() {
+        List<Material> allItems = new ArrayList<>();
+        getCategorizedMaterials().values().forEach(allItems::addAll);
+        return allItems;
     }
 }
+

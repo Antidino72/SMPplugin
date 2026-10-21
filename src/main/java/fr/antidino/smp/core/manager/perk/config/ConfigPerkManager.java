@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ConfigPerkManager {
-    CorePlugin plugin;
+    final CorePlugin plugin;
 
     /** Tous les fichiers de perks (dans resources/perks/ et plugins/SMPplugin/perks/). */
     public static final List<String> FILES = List.of(

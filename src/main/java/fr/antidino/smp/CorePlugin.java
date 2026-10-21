@@ -56,8 +56,7 @@ public final class CorePlugin extends JavaPlugin {
         PDCBuilder.init(this);
         perkManager = new PerkManager(this);
         slotManager = new SlotManager(this);
-        new SmithingRegisterAllItem(this);
-        getCommand("perk").setExecutor(new AdminCommands(this));
+        SmithingRegisterAllItem.RegisterAllItem(this);
 
         slotExpander = new SlotExpander(this);
         perkTasks = new PerkTasks(this);
@@ -67,6 +66,10 @@ public final class CorePlugin extends JavaPlugin {
         codexMenu = new CodexMenu(this);
         getServer().getPluginManager().registerEvents(new CodexListener(this), this);
         PerksCommand perksCommand = new PerksCommand(this);
+        AdminCommands adminCommands = new AdminCommands(this);
+
+        getCommand("perk").setExecutor(adminCommands);
+        getCommand("perk").setTabCompleter(adminCommands);
         getCommand("perks").setExecutor(perksCommand);
         getCommand("perks").setTabCompleter(perksCommand);
 

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 public class PerkManager {
-    private final ConfigPerkManager configPerkManager;
     private static final EquipmentSlot[] ARMOR_SLOTS = {
             EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
     };
@@ -29,7 +28,7 @@ public class PerkManager {
     public PerkManager(CorePlugin plugin) {
         this.plugin = plugin;
         registerDefaults();
-        configPerkManager = plugin.configPerkManager;
+        ConfigPerkManager configPerkManager = plugin.configPerkManager;
     }
 
     private void registerDefaults() {

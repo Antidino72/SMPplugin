@@ -2,10 +2,15 @@ package fr.antidino.smp.core.manager.database;
 
 import fr.antidino.smp.CorePlugin;
 import org.bukkit.entity.Player;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
+
+
 public class DatabaseProvider {
+    private static final Logger log = LoggerFactory.getLogger(DatabaseProvider.class);
     CorePlugin plugin;
 
     private static final String INSERT_PLAYER_SQL = """
@@ -26,7 +31,7 @@ public class DatabaseProvider {
             ps.setString(1, uuid);
             return ps.executeQuery().next();
         }catch (SQLException e){
-            e.printStackTrace();
+            log.info(" Error as {}", String.valueOf(e));
             return false;
         }
     }
@@ -39,7 +44,7 @@ public class DatabaseProvider {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(" Error as {}", String.valueOf(e));
         }
     }
 
@@ -51,7 +56,7 @@ public class DatabaseProvider {
             ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.info(" Error as {}", String.valueOf(e));
         }
     }
 }
