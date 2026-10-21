@@ -1,5 +1,6 @@
 package fr.antidino.smp;
 
+import fr.antidino.smp.core.listeners.*;
 import fr.antidino.smp.core.manager.SlotExpander;
 import fr.antidino.smp.core.manager.SlotManager;
 import fr.antidino.smp.core.manager.codex.CodexListener;
@@ -8,10 +9,6 @@ import fr.antidino.smp.core.commands.AdminCommands;
 import fr.antidino.smp.core.commands.PerksCommand;
 import fr.antidino.smp.core.manager.database.DatabaseManager;
 import fr.antidino.smp.core.manager.database.DatabaseProvider;
-import fr.antidino.smp.core.listeners.CraftingListener;
-import fr.antidino.smp.core.listeners.ItemBreakListener;
-import fr.antidino.smp.core.listeners.PlayerJoinListener;
-import fr.antidino.smp.core.listeners.SmithingListener;
 import fr.antidino.smp.core.SmithingRegisterAllItem;
 import fr.antidino.smp.core.manager.perk.config.ConfigPerkManager;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
@@ -50,6 +47,7 @@ public final class CorePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SmithingListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new SavingPerkListeners(this), this);
 
         pdcBuilder = new PDCBuilder(this);
 
