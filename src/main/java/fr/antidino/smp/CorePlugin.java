@@ -16,6 +16,7 @@ import fr.antidino.smp.core.manager.perk.AbstractPerk;
 import fr.antidino.smp.core.manager.perk.PerkEffectListener;
 import fr.antidino.smp.core.manager.perk.PerkManager;
 import fr.antidino.smp.core.manager.perk.PerkTasks;
+import fr.antidino.smp.core.manager.rarity.RarityManager;
 import fr.antidino.smp.librairie.PDCBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -34,6 +35,7 @@ public final class CorePlugin extends JavaPlugin {
     public CodexMenu codexMenu;
     public PerkTasks perkTasks;
     public SlotExpander slotExpander;
+    public RarityManager rarityManager;
 
     private DatabaseManager databaseManager;
     public DatabaseProvider databaseProvider;
@@ -49,6 +51,7 @@ public final class CorePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new SavingPerkListeners(this), this);
 
+        rarityManager = new RarityManager(this);
         pdcBuilder = new PDCBuilder(this);
 
         PDCBuilder.init(this);
@@ -92,6 +95,7 @@ public final class CorePlugin extends JavaPlugin {
         reloadConfig();
         configPerkManager.LoadConfigAtStart();
         perkManager.reload();
+        if (rarityManager != null) rarityManager.reload();
         if (slotExpander != null) slotExpander.reload();
 
         List<NamespacedKey> keys = perkManager.getPerks().stream().map(AbstractPerk::getKey).toList();

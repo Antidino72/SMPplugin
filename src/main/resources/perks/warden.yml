@@ -16,3 +16,8 @@ craft :
     D: "DIAMOND_BLOCK"
 cooldown : 30
 cooldown-message : "<red>Tu dois attendre encore %time%s avant de réutiliser La Capacité du Warden !"
+
+description:
+  - "<gray>Libère un <aqua>rayon sonique</aqua> dévastateur"
+  - "<gray>(<white>Shift + clic</white> <gray>à mains nues)."
+  - "<gray>À appliquer sur un <white>plastron</white><gray>."

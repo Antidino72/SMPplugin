@@ -14,3 +14,9 @@ craft :
 
 values :
   heal_percent : [10, 26, 40]
+
+
+description:
+  - "<gray>Vous soigne d'un <red>pourcentage des dégâts</red>"
+  - "<gray>infligés à chaque coup."
+  - "<gray>(à appliquer sur une arme)."

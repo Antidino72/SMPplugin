@@ -26,6 +26,5 @@ modifiers:
     slot_group: "HEAD"
 
 description:
-  - "<green>+ vitesse de déplacement</green>"
-  - "<red>- vie maximale</red>"
-  - "<gray>(à appliquer sur des bottes)."
+  - "<gray>Augmente votre <red>vie maximale</red>"
+  - "<gray>(à appliquer sur un casque)."

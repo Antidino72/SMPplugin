@@ -130,9 +130,19 @@ public class PDCBuilder {
             for (String raw : perks) {
                 PerkEntry entry = PerkEntry.parse(raw);
                 AbstractPerk perk = plugin.perkManager == null ? null : plugin.perkManager.getPerk(entry.id());
-                String name = perk != null ? perk.getDisplayName() : entry.id();
-                String level = entry.level() > 1 ? " <gray>" + AbstractPerk.roman(entry.level()) : "";
-                lore.add(MiniMessage.miniMessage().deserialize("<!italic><green> ▪ <white>" + name + level));
+                Component line = MiniMessage.miniMessage().deserialize("<!italic><green> ▪ ");
+                if (perk != null && plugin.rarityManager != null) {
+                    // nom coloré selon la rareté (rarity.yml)
+                    line = line.append(plugin.rarityManager.styledName(perk));
+                } else {
+                    line = line.append(MiniMessage.miniMessage().deserialize(
+                            "<!italic><white>" + (perk != null ? perk.getDisplayName() : entry.id())));
+                }
+                if (entry.level() > 1) {
+                    line = line.append(MiniMessage.miniMessage().deserialize(
+                            "<!italic> <gray>" + AbstractPerk.roman(entry.level())));
+                }
+                lore.add(line);
             }
         }
 
@@ -143,7 +153,7 @@ public class PDCBuilder {
         return item;
     }
 
-    /** Niveau d'un item perk (1 si absent : anciens items et niveau 1). */
+
     public int getPerkLevel(ItemStack perkItem) {
         if (perkItem == null || !perkItem.hasItemMeta()) return 1;
         return Math.max(1, perkItem.getItemMeta().getPersistentDataContainer()

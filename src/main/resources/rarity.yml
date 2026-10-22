@@ -1,0 +1,50 @@
+default_rarity: "common"
+
+color_perk_name: true
+
+# Ligne affichée dans le codex
+rarity_line: "<gray>Rareté : %rarity%"
+
+sort_codex_by_rarity: true
+
+# Les raretés sont classées dans l'ordre du fichier : la première est la plus commune.
+rarities:
+  common:
+    display_name: "Commun"
+    color: "<gray>"
+    perks:                       # ids des perks
+      - "sprinter_perk"
+      - "night_vision_perk"
+
+  uncommon:
+    display_name: "Peu commun"
+    color: "<green>"
+    perks:
+      - "health_perk"
+      - "speed_perk"
+      - "armor_perk"
+      - "miner_perk"
+      - "magnet_perk"
+
+  rare:
+    display_name: "Rare"
+    color: "<gradient:#00c6ff:#0072ff>"
+    perks:
+      - "attack_damage_perk"
+      - "attack_speed_perk"
+      - "smelter_perk"
+      - "double_jump_perk"
+      - "no_fall_perk"
+
+  epic:
+    display_name: "Épique"
+    color: "<gradient:#c471f5:#fa71cd>"
+    perks:
+      - "lifesteal_perk"
+      - "glass_cannon_perk"
+
+  legendary:
+    display_name: "Légendaire"
+    color: "<bold><gradient:#ff512f:#f09819:#ffe259>"
+    perks:
+      - "warden_perk"
