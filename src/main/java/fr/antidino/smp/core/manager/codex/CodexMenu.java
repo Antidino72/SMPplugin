@@ -25,7 +25,7 @@ import java.util.Map;
  * Menus du /perks codex :
  *  - LIST : tous les perks actifs du serveur (paginé) + item d'extension de slots
  *  - DETAIL : craft + description (+ niveaux) d'un perk ou de l'item de slots
- *
+
  * Tous les textes affichés passent par le MessageManager (fichiers de langue).
  */
 public class CodexMenu {

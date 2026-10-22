@@ -186,9 +186,6 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
     private void send(CommandSender sender,Component message) {
         sender.sendMessage(message);
     }
-    private void send(CommandSender sender, String message) {
-        sender.sendMessage(MiniMessage.miniMessage().deserialize(message));
-    }
 
     @Override
     public ArrayList<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String @NonNull [] args) {

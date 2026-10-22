@@ -1,7 +1,6 @@
 package fr.antidino.smp.core.commands;
 
 import fr.antidino.smp.CorePlugin;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

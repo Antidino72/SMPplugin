@@ -21,9 +21,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -103,10 +100,7 @@ public final class CorePlugin extends JavaPlugin {
         }
         return perkManager.getPerks().size();
     }
-    public void reloadAllConfig() {
-        this.reloadConfig();
-        configPerkManager.ReloadConfig();
-    }
+
     @Override
     public void onDisable() {
         if (perkTasks != null) {
