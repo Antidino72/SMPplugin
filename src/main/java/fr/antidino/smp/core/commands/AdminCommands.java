@@ -2,6 +2,7 @@ package fr.antidino.smp.core.commands;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.SmithingRegisterAllItem;
+import fr.antidino.smp.core.manager.MessageManager;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
 import fr.antidino.smp.librairie.ChatUtil;
 import fr.antidino.smp.librairie.PDCBuilder;
@@ -19,9 +20,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * /perk reload                              : recharge config, perks et crafts
@@ -29,15 +28,18 @@ import java.util.Locale;
  */
 public class AdminCommands implements CommandExecutor, TabCompleter {
     private static final String EXPANDER_ID = "slot_expander";
+    MessageManager messageManager;
     private final CorePlugin plugin;
     public AdminCommands(CorePlugin plugin) {
+
         this.plugin = plugin;
+        messageManager = plugin.messageManager;
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         if (args.length == 0) {
-            send(sender, "<gray>Usage : <yellow>/perk reload <gray>| <yellow>/perk give <perk|slot_expander> [nombre] [niveau]");
+            send(sender, messageManager.get("admin_command_usage"));
             return true;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
@@ -45,27 +47,29 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
 
             case "reload" -> {
                 int count = plugin.fullReload();
-                send(sender, "<green>Config rechargée : <white>" + count + " <green>perks, crafts et item de slots mis à jour.");
+                Map<String, String> vars = new HashMap<>();
+                vars.put("count", String.valueOf(count));
+                send(sender, messageManager.get("config_reloaded",vars));
             }
             case "give" -> give(sender, args);
-            default -> send(sender, "<red>Sous-commande inconnue. <gray>Essaie <yellow>/perk reload <gray>ou <yellow>/perk give");
+            default -> send(sender, messageManager.get("admin_command_usage"));
         }
         return true;
     }
     private void slot(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            send(sender, "<yellow><b>Usage : <b/>/perk slot [argument]");
+            send(sender, messageManager.get("slot_command_usage"));
             return;
         }
         switch (args[1].toLowerCase(Locale.ROOT)) {
             case "init" -> {
                 if (!(sender instanceof Player player)) {
-                    send(sender, "<red>Only players can execute this command.");
+                    send(sender, messageManager.get("player_only"));
                     break;
                 }
                 ItemStack item = player.getInventory().getItemInMainHand();
                 if (item.getType() == Material.AIR) {
-                    send(sender, "<red>You must have an item in your hand!");
+                    send(sender, messageManager.get("slot_item_in_hand"));
                     break;
                 }
                 if (!SmithingRegisterAllItem.getAllMaterials().contains(item.getType())) {
@@ -75,11 +79,11 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
                 }
                 ItemStack updatedItem = plugin.pdcBuilder.initializeSlots(item);
                 player.getInventory().setItemInMainHand(updatedItem);
-                send(sender, "<green>Item successfully initialized!");
+                send(sender,messageManager.get("init_slot") );
             }
             case "apply" -> {
                 if (!(sender instanceof Player player)) {
-                    send(sender, "<red>Only players can execute this command.");
+                    send(sender, messageManager.get("player_only"));
                     break;
                 }
 
@@ -88,7 +92,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
 
 
                 if (appliedItem.getType() == Material.AIR || perk.getType() == Material.AIR) {
-                    send(sender, "<red>You must hold a perk in your main hand and an item in your off-hand!");
+                    send(sender, messageManager.get("apply_perk_no_item"));
                     break;
                 }
 
@@ -102,7 +106,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
 
                 ItemMeta perkMeta = perk.getItemMeta();
                 if (perkMeta == null || !perkMeta.getPersistentDataContainer().has(PDCBuilder.PERK_ID, PersistentDataType.STRING)) {
-                    send(sender, "<red>The item in your main hand is not a valid perk!");
+                    send(sender, messageManager.get("applied_perk_no_valid"));
                     break;
                 }
 
@@ -118,18 +122,17 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
                 } else {
                     player.getInventory().setItemInMainHand(new ItemStack(Material.AIR));
                 }
-
-                send(sender, "<green>Perk successfully applied!");
+                send(sender, messageManager.get("applied_perk_success"));
             }
         }
     }
     private void give(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            send(sender, "<red>Commande réservée aux joueurs.");
+            send(sender, messageManager.get("player_only"));
             return;
         }
         if (args.length < 2) {
-            send(sender, "<gray>Usage : <yellow>/perk give <perk|slot_expander> [nombre] [niveau]");
+            send(sender, messageManager.get("give_usage"));
             return;
         }
 
@@ -138,7 +141,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
             try {
                 count = Math.clamp(Integer.parseInt(args[2]), 1, 64);
             } catch (NumberFormatException e) {
-                send(sender, "<red>Nombre invalide : " + args[2]);
+                Map<String,String> vars = new HashMap<>();
+                vars.put("count", String.valueOf(args[2]));
+                send(sender,messageManager.get("give_invalid_number",vars));
                 return;
             }
         }
@@ -151,7 +156,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
 
         AbstractPerk perk = plugin.perkManager.getPerk(args[1]);
         if (perk == null) {
-            send(sender, "<red>Perk inconnu : " + args[1]);
+            Map<String,String> vars = new HashMap<>();
+            vars.put("count", String.valueOf(args[1]));
+            send(sender, messageManager.get("give_unknow_perk",vars));
             return;
         }
         int level = 1;
@@ -159,11 +166,15 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
             try {
                 level = Integer.parseInt(args[3]);
             } catch (NumberFormatException e) {
-                send(sender, "<red>Niveau invalide : " + args[3]);
+                Map<String,String> vars = new HashMap<>();
+                vars.put("count", String.valueOf(args[3]));
+                send(sender, messageManager.get("give_invalid_number",vars));
                 return;
             }
             if (level < 1 || level > perk.getMaxLevel()) {
-                send(sender, "<red>Niveau entre 1 et " + perk.getMaxLevel() + " pour ce perk.");
+                Map<String,String> vars = new HashMap<>();
+                vars.put("count", perk.getMaxLevel() + "");
+                send(sender,messageManager.get("give_invalid_level_amount",vars));
                 return;
             }
         }
@@ -172,7 +183,9 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
             player.getInventory().addItem(item);
         }
     }
-
+    private void send(CommandSender sender,Component message) {
+        sender.sendMessage(message);
+    }
     private void send(CommandSender sender, String message) {
         sender.sendMessage(MiniMessage.miniMessage().deserialize(message));
     }

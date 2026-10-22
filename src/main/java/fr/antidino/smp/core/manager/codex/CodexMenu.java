@@ -4,6 +4,7 @@ import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.manager.perk.AbstractPerk;
 import fr.antidino.smp.librairie.ItemBuilder;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -16,13 +17,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Menus du /perks codex :
- *  - LIST   : tous les perks actifs du serveur (paginé) + item d'extension de slots
+ *  - LIST : tous les perks actifs du serveur (paginé) + item d'extension de slots
  *  - DETAIL : craft + description (+ niveaux) d'un perk ou de l'item de slots
+ *
+ * Tous les textes affichés passent par le MessageManager (fichiers de langue).
  */
 public class CodexMenu {
 
@@ -42,8 +46,6 @@ public class CodexMenu {
     public static final int NEXT_SLOT = 53;
 
     public static final String EXPANDER_ID = "__slot_expander__";
-
-
 
     public enum Type { LIST, DETAIL }
 
@@ -91,11 +93,12 @@ public class CodexMenu {
         int maxPage = Math.max(0, (perks.size() - 1) / PERKS_PER_PAGE);
         page = Math.clamp(page, 0, maxPage);
 
-        String title = "<dark_gray>Codex des perks";
-        if (maxPage > 0) title += " <gray>(" + (page + 1) + "/" + (maxPage + 1) + ")";
+        Component title = maxPage > 0
+                ? msg("codex_title_paged", "page", String.valueOf(page + 1), "max", String.valueOf(maxPage + 1))
+                : msg("codex_title");
 
         CodexHolder holder = new CodexHolder(Type.LIST, page, null);
-        Inventory inv = Bukkit.createInventory(holder, 54, mm(title));
+        Inventory inv = Bukkit.createInventory(holder, 54, title);
         holder.setInventory(inv);
 
         int start = page * PERKS_PER_PAGE;
@@ -105,10 +108,10 @@ public class CodexMenu {
 
         ItemStack filler = filler();
         for (int s = 45; s < 54; s++) inv.setItem(s, filler);
-        if (page > 0) inv.setItem(PREV_SLOT, button(Material.ARROW, "<yellow>← Page précédente"));
-        if (page < maxPage) inv.setItem(NEXT_SLOT, button(Material.ARROW, "<yellow>Page suivante →"));
+        if (page > 0) inv.setItem(PREV_SLOT, button(Material.ARROW, msg("codex_prev_page")));
+        if (page < maxPage) inv.setItem(NEXT_SLOT, button(Material.ARROW, msg("codex_next_page")));
         if (plugin.slotExpander != null) inv.setItem(EXPANDER_SLOT, expanderListItem());
-        inv.setItem(CLOSE_SLOT, button(Material.BARRIER, "<red>Fermer"));
+        inv.setItem(CLOSE_SLOT, button(Material.BARRIER, msg("codex_close")));
 
         player.openInventory(inv);
     }
@@ -123,10 +126,10 @@ public class CodexMenu {
         lore.addAll(descriptionLines(perk.getDescription()));
         if (perk.getMaxLevel() > 1) {
             lore.add(Component.empty());
-            lore.add(mm("<gray>Niveau max : <white>" + AbstractPerk.roman(perk.getMaxLevel())));
+            lore.add(msg("codex_max_level", "level", AbstractPerk.roman(perk.getMaxLevel())));
         }
         lore.add(Component.empty());
-        lore.add(mm("<yellow>▶ Clic pour voir le craft"));
+        lore.add(msg("codex_click_craft"));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -141,7 +144,7 @@ public class CodexMenu {
         lore.add(Component.empty());
         lore.addAll(descriptionLines(plugin.slotExpander.getDescription()));
         lore.add(Component.empty());
-        lore.add(mm("<yellow>▶ Clic pour voir le craft"));
+        lore.add(msg("codex_click_craft"));
         meta.lore(lore);
         item.setItemMeta(meta);
         return item;
@@ -153,12 +156,12 @@ public class CodexMenu {
         List<Component> description = new ArrayList<>(descriptionLines(perk.getDescription()));
         if (perk.getMaxLevel() > 1) {
             description.add(Component.empty());
-            description.add(mm("<gray>Niveaux : <white>I <gray>→ <white>" + AbstractPerk.roman(perk.getMaxLevel())));
-            description.add(mm("<gray>Amélioration : <white>" + perk.getUpgradeCost() + " perks <gray>de même niveau"));
-            description.add(mm("<gray>en table de craft = niveau suivant"));
+            description.add(msg("codex_levels", "max", AbstractPerk.roman(perk.getMaxLevel())));
+            description.add(msg("codex_upgrade_cost", "cost", String.valueOf(perk.getUpgradeCost())));
+            description.add(msg("codex_upgrade_hint"));
         }
         openRecipeView(player, perk.getId(), fromPage,
-                mm("<dark_gray>Craft : ").append(mm(perk.getDisplayName())),
+                msg("codex_craft_title").append(mm(perk.getDisplayName())),
                 perk.getItem().clone(), perk.getCraftShape(), perk.getCraftIngredients(), description);
     }
 
@@ -166,11 +169,11 @@ public class CodexMenu {
         if (plugin.slotExpander == null) return;
         List<Component> description = new ArrayList<>(descriptionLines(plugin.slotExpander.getDescription()));
         description.add(Component.empty());
-        description.add(mm("<gray>Utilisation : <white>table de forge"));
-        description.add(mm("<gray>Ajoute <white>+" + plugin.slotExpander.getAdded() + " <gray>emplacement(s)"));
-        description.add(mm("<gray>Maximum : <white>" + plugin.slotExpander.getMax() + " <gray>par équipement"));
+        description.add(msg("codex_expander_usage"));
+        description.add(msg("codex_expander_added", "added", String.valueOf(plugin.slotExpander.getAdded())));
+        description.add(msg("codex_expander_max", "max", String.valueOf(plugin.slotExpander.getMax())));
         openRecipeView(player, EXPANDER_ID, fromPage,
-                mm("<dark_gray>Craft : ").append(mm(plugin.slotExpander.getDisplayName())),
+                msg("codex_craft_title").append(mm(plugin.slotExpander.getDisplayName())),
                 plugin.slotExpander.getItem(), plugin.slotExpander.getCraftShape(),
                 plugin.slotExpander.getCraftIngredients(), description);
     }
@@ -198,21 +201,22 @@ public class CodexMenu {
             }
         }
 
-        inv.setItem(ARROW_SLOT, button(Material.ARROW, "<gray>→"));
+        inv.setItem(ARROW_SLOT, button(Material.ARROW, mm("<gray>→")));
         inv.setItem(RESULT_SLOT, result);
 
-        if (player.hasPermission("smp.perks.codex.give")){
-            ItemStack give_button = new ItemBuilder(Material.BARRIER,plugin).setName(mm("<red>GIVE ITEM")).build();
+        if (player.hasPermission("smp.perks.codex.give")) {
+            ItemStack give_button = new ItemBuilder(Material.BARRIER, plugin)
+                    .setName(msg("codex_give_button"))
+                    .build();
             inv.setItem(GIVE_SLOT, give_button);
         }
-        ItemStack book =
-                new ItemBuilder(Material.BOOK,plugin)
+        ItemStack book = new ItemBuilder(Material.BOOK, plugin)
                 .setLore(description)
-                .setName(mm("<gold>Description"))
+                .setName(msg("codex_description_title"))
                 .build();
 
         inv.setItem(DESCRIPTION_SLOT, book);
-        inv.setItem(BACK_SLOT, button(Material.ARROW, "<yellow>← Retour"));
+        inv.setItem(BACK_SLOT, button(Material.ARROW, msg("codex_back")));
         player.openInventory(inv);
     }
 
@@ -221,17 +225,18 @@ public class CodexMenu {
     private List<Component> descriptionLines(List<String> lines) {
         List<Component> out = new ArrayList<>();
         if (lines.isEmpty()) {
-            out.add(mm("<dark_gray>Aucune description configurée."));
+            out.add(msg("codex_no_description"));
         } else {
+            // Descriptions définies dans la config des perks (pas dans les fichiers de langue)
             for (String line : lines) out.add(mm(line));
         }
         return out;
     }
 
-    private ItemStack button(Material material, String name) {
+    private ItemStack button(Material material, Component name) {
         ItemStack item = new ItemStack(material);
         ItemMeta meta = item.getItemMeta();
-        meta.displayName(mm(name));
+        meta.displayName(name);
         item.setItemMeta(meta);
         return item;
     }
@@ -244,7 +249,23 @@ public class CodexMenu {
         return item;
     }
 
-    /** MiniMessage sans italique par défaut (comme le reste du plugin). */
+    /**
+     * Récupère un message traduit, sans italique par défaut.
+     * Les variables sont passées par paires clé/valeur : msg("key", "count", "5", "max", "10")
+     */
+    private Component msg(String key, String... vars) {
+        Component component;
+        if (vars.length == 0) {
+            component = plugin.messageManager.get(key);
+        } else {
+            Map<String, String> map = new HashMap<>();
+            for (int i = 0; i + 1 < vars.length; i += 2) map.put(vars[i], vars[i + 1]);
+            component = plugin.messageManager.get(key, map);
+        }
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE);
+    }
+
+    /** MiniMessage sans italique par défaut (pour les textes venant de la config des perks). */
     private static Component mm(String text) {
         return MiniMessage.miniMessage().deserialize("<!italic>" + text);
     }

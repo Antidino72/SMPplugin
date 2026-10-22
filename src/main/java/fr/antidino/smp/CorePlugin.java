@@ -1,6 +1,7 @@
 package fr.antidino.smp;
 
 import fr.antidino.smp.core.listeners.*;
+import fr.antidino.smp.core.manager.MessageManager;
 import fr.antidino.smp.core.manager.SlotExpander;
 import fr.antidino.smp.core.manager.SlotManager;
 import fr.antidino.smp.core.manager.codex.CodexListener;
@@ -32,6 +33,7 @@ public final class CorePlugin extends JavaPlugin {
     public PerkManager perkManager;
     public SlotManager slotManager;
     public ConfigPerkManager configPerkManager;
+    public MessageManager messageManager;
     public CodexMenu codexMenu;
     public PerkTasks perkTasks;
     public SlotExpander slotExpander;
@@ -42,6 +44,7 @@ public final class CorePlugin extends JavaPlugin {
     public void onEnable() {
         configPerkManager = new ConfigPerkManager(this);
         initConfig();
+        messageManager = new MessageManager(this);
 
         getServer().getPluginManager().registerEvents(new CraftingListener(this), this);
         getServer().getPluginManager().registerEvents(new SmithingListener(this), this);

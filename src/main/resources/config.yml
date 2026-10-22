@@ -1,7 +1,6 @@
+lang : "fr_FR"
+
 slot:
   max : 3
   min : 1
 
-perks:
-  health_perk :
-    material : REDSTONE

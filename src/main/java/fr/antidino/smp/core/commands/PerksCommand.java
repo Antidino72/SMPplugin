@@ -23,14 +23,14 @@ public class PerksCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("Commande réservée aux joueurs.");
+            sender.sendMessage(plugin.messageManager.get("player_only"));
             return true;
         }
         if (args.length >= 1 && args[0].equalsIgnoreCase("codex")) {
             plugin.codexMenu.openList(player, 0);
             return true;
         }
-        player.sendMessage(MiniMessage.miniMessage().deserialize("<gray>Usage : <yellow>/perks codex"));
+        player.sendMessage(plugin.messageManager.get("codex_usage"));
         return true;
     }
 

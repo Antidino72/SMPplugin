@@ -40,6 +40,7 @@ public class CodexListener implements Listener {
                 case CodexMenu.BACK_SLOT: {
                     click(player);
                     plugin.codexMenu.openList(player, holder.page);
+                    break;
                 }
                 case CodexMenu.GIVE_SLOT: {
                     click(player);
@@ -47,7 +48,8 @@ public class CodexListener implements Listener {
                     if (result == null || result.getType() == Material.AIR) return;
                     if (result.getItemMeta() == null) return;
                     player.getInventory().addItem(result);
-                    player.sendMessage(MiniMessage.miniMessage().deserialize("<green>You Received 1 perk"));
+                    player.sendMessage(plugin.messageManager.get("codex_give_success"));
+                    break;
                 }
             }
         }
