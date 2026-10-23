@@ -59,6 +59,7 @@ public class CraftingListener implements Listener {
            }
            cooldownManager.setCooldown(playerId,0.3);
             Bukkit.getScheduler().runTaskAsynchronously(plugin,()->{
+                plugin.rarityManager.onCraft(player, perk, plugin.pdcBuilder.getPerkLevel(resultType));
                     plugin.databaseProvider.InsertPerkCraftSQL(id,playerId.toString());
             });
         }

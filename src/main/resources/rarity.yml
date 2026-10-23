@@ -1,24 +1,63 @@
+# ============================================================================
+#  RARETÉS DES PERKS  (plugins/SMPplugin/rarity.yml)
+#  Tout le texte et toutes les couleurs sont en MiniMessage uniquement.
+#  Rechargement à chaud : /perk reload
+# ============================================================================
+#
+#  Exemples de couleurs valides pour "color" :
+#    "<gray>"                           couleur simple
+#    "<#ff8800>"                        couleur hexadécimale
+#    "<gradient:#ff512f:#f09819>"       dégradé 2 couleurs
+#    "<gradient:#00c6ff:#0072ff:#00c6ff>"  dégradé multi-couleurs
+# ============================================================================
+
+# Rareté donnée aux perks qui ne sont listés dans aucune rareté.
+# Mettre "" (vide) pour ne rien afficher pour ces perks.
 default_rarity: "common"
 
+# true  = le nom du perk prend la couleur / le dégradé de sa rareté
+#         (dans le lore des équipements et dans le codex)
+# false = le nom garde la couleur définie dans son propre fichier
 color_perk_name: true
 
-# Ligne affichée dans le codex
+# true = le symbole de la rareté est aussi affiché devant le nom du perk
+symbol_in_name: false
+
+# Ligne affichée dans le codex (liste + détail). %rarity% = symbole + nom coloré.
 rarity_line: "<gray>Rareté : %rarity%"
 
+# true = le codex trie les perks de la plus commune à la plus rare (puis par id)
 sort_codex_by_rarity: true
 
+# Message envoyé quand la limite "max_per_item" d'une rareté est atteinte.
+# Variables : %max% (limite), %rarity% (nom coloré de la rareté)
+limit_message: "<red>Cet équipement a déjà %max% perk(s) %rarity%<red> !"
+
 # Les raretés sont classées dans l'ordre du fichier : la première est la plus commune.
+#
+# Options d'une rareté :
+#   display_name    nom affiché
+#   color           couleur / dégradé (voir plus haut)
+#   symbol          (optionnel) symbole devant le nom, ex: "✦"
+#   color_name      (optionnel) surcharge "color_perk_name" pour cette rareté
+#   max_per_item    (optionnel) nombre max de perks de cette rareté par équipement, -1 = illimité
+#   craft_announce  (optionnel) message diffusé à tout le serveur quand un perk est crafté
+#                   variables : %player% %perk% %level% %rarity%
+#   craft_sound     (optionnel) son joué au joueur qui craft, ex: "entity.player.levelup"
+#   perks           ids des perks (ceux de /perk give). Le suffixe "_perk" est facultatif.
 rarities:
   common:
     display_name: "Commun"
     color: "<gray>"
-    perks:                       # ids des perks
+    symbol: "•"
+    perks:
       - "sprinter_perk"
       - "night_vision_perk"
 
   uncommon:
     display_name: "Peu commun"
     color: "<green>"
+    symbol: "◆"
     perks:
       - "health_perk"
       - "speed_perk"
@@ -29,6 +68,7 @@ rarities:
   rare:
     display_name: "Rare"
     color: "<gradient:#00c6ff:#0072ff>"
+    symbol: "✦"
     perks:
       - "attack_damage_perk"
       - "attack_speed_perk"
@@ -39,6 +79,10 @@ rarities:
   epic:
     display_name: "Épique"
     color: "<gradient:#c471f5:#fa71cd>"
+    symbol: "✷"
+    max_per_item: 2
+    craft_sound: "entity.player.levelup"
+    craft_announce: "<dark_gray>[<light_purple>★<dark_gray>] <white>%player% <gray>a créé %perk% <gray>(%rarity%<gray>) !"
     perks:
       - "lifesteal_perk"
       - "glass_cannon_perk"
@@ -46,5 +90,9 @@ rarities:
   legendary:
     display_name: "Légendaire"
     color: "<bold><gradient:#ff512f:#f09819:#ffe259>"
+    symbol: "✪"
+    max_per_item: 1
+    craft_sound: "ui.toast.challenge_complete"
+    craft_announce: "<dark_gray>[<gold>★<dark_gray>] <white>%player% <gray>vient de créer %perk% <gray>(%rarity%<gray>) !"
     perks:
       - "warden_perk"
