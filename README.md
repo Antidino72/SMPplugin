@@ -43,7 +43,7 @@ Plugin **Paper** pour serveur SMP qui ajoute un système de **perks** : des item
 - **Slots de perks** stockés dans le `PersistentDataContainer` (PDC) de l'équipement, affichés dans le lore.
 - **Application via la table de forge** (`PrepareSmithingEvent`) : équipement + item de perk.
 - **Niveaux de perks** : crafter plusieurs perks identiques en table de craft donne le niveau supérieur.
-- **Cristal d'emplacement** (`slot_expander`) : item craftable qui ajoute des slots à un équipement.
+- **Cristal d'emplacement** (`slotExpander`) : item craftable qui ajoute des slots à un équipement.
 - **Codex en jeu** (`/perks codex`) : menu 54 slots listant tous les perks, avec leur craft, leur description et leur niveau max.
 - **Récupération des perks** : quand un équipement se casse, les perks appliqués sont rendus (avec leur niveau).
 - **Rechargement à chaud** (`/perk reload`) : relit tous les YAML et réenregistre les crafts.
@@ -330,7 +330,7 @@ src/main/java/fr/antidino/smp/
 | `perk_slots` | `LIST<STRING>` | Perks appliqués, au format `id` (niv. 1) ou `id:niveau` |
 | `perk_id` | `STRING` | Identifie un item de perk |
 | `perk_level` | `INTEGER` | Niveau de l'item de perk |
-| `slot_expander` | `STRING` | Identifie le cristal d'emplacement |
+| `slotExpander` | `STRING` | Identifie le cristal d'emplacement |
 
 ### Flux d'application d'un perk
 
