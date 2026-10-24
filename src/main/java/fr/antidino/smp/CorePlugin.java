@@ -1,5 +1,6 @@
 package fr.antidino.smp;
 
+import fr.antidino.smp.modules.commands.SpellCommands;
 import fr.antidino.smp.modules.listeners.*;
 import fr.antidino.smp.core.MessageManager;
 import fr.antidino.smp.modules.perk.slotExpander.SlotExpander;
@@ -18,6 +19,7 @@ import fr.antidino.smp.modules.perk.PerkManager;
 import fr.antidino.smp.modules.perk.PerkTasks;
 import fr.antidino.smp.modules.perk.rarity.RarityManager;
 import fr.antidino.smp.core.Utils.PDCBuilder;
+import fr.antidino.smp.modules.spell.SpellManager;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -28,6 +30,7 @@ import java.util.List;
 
 public final class CorePlugin extends JavaPlugin {
     public PDCBuilder pdcBuilder;
+    /* Perk */
     public PerkManager perkManager;
     public SlotManager slotManager;
     public ConfigPerkManager configPerkManager;
@@ -36,6 +39,9 @@ public final class CorePlugin extends JavaPlugin {
     public PerkTasks perkTasks;
     public SlotExpander slotExpander;
     public RarityManager rarityManager;
+
+    /* Spell*/
+    public SpellManager spellManager;
 
     private DatabaseManager databaseManager;
     public DatabaseProvider databaseProvider;
@@ -50,6 +56,7 @@ public final class CorePlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ItemBreakListener(this), this);
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
         getServer().getPluginManager().registerEvents(new SavingPerkListeners(this), this);
+        getServer().getPluginManager().registerEvents(new PerkEffectListener(this), this);
 
         rarityManager = new RarityManager(this);
         pdcBuilder = new PDCBuilder(this);
@@ -62,17 +69,21 @@ public final class CorePlugin extends JavaPlugin {
         slotExpander = new SlotExpander(this);
         perkTasks = new PerkTasks(this);
         perkTasks.start();
-        getServer().getPluginManager().registerEvents(new PerkEffectListener(this), this);
+
+        spellManager = new SpellManager(this);
 
         codexMenu = new CodexMenu(this);
         getServer().getPluginManager().registerEvents(new CodexListener(this), this);
         PerksCommand perksCommand = new PerksCommand(this);
         AdminCommands adminCommands = new AdminCommands(this);
+        SpellCommands spellCommands= new SpellCommands(this);
 
         getCommand("perk").setExecutor(adminCommands);
         getCommand("perk").setTabCompleter(adminCommands);
         getCommand("perks").setExecutor(perksCommand);
         getCommand("perks").setTabCompleter(perksCommand);
+        getCommand("spell").setExecutor(spellCommands);
+        getCommand("spell").setTabCompleter(spellCommands);
 
         databaseManager = new DatabaseManager(this);
         databaseManager.initDatabase();

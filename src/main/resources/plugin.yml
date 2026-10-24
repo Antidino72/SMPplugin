@@ -12,6 +12,10 @@ commands :
     description: Ouvre le codex des perks (liste, crafts, descriptions)
     usage: /perks codex
     permission: smp.perks.codex
+  spell :
+    description: Jete un sort
+    permission: smp.spell
+    usage: /spell [id]
 permissions:
   smp.perks.codex:
     description: Permet d'ouvrir le codex des perks

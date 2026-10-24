@@ -35,3 +35,7 @@ codex_give_button : "<red>GIVE ITEM"
 codex_description_title : "<gold>Description"
 codex_no_description : "<gray>Aucune description"
 codex_give_success : "<red>Perk Give avec succès"
+
+# --- Spell ---
+spell_command_usage : "<yellow>/spell <b>[id]"
+spell_not_found : "<red>L'identifiant de votre sort est inconnue"

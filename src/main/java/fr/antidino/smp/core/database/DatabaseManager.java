@@ -39,7 +39,7 @@ public class DatabaseManager {
         }
 
         config.setJdbcUrl("jdbc:sqlite:" + dbFile.getAbsolutePath());
-        config.setMaximumPoolSize(10); // Nombre max de connexions simultanées
+        config.setMaximumPoolSize(10);
         config.setPoolName("SMP-HikariPool");
 
 
@@ -75,7 +75,6 @@ public class DatabaseManager {
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute(playersTable);
             stmt.execute(perksTable);
-            plugin.getLogger().info("Tables de la base de données initialisées avec succès !");
         } catch (SQLException e) {
             log.info(" Error as {}", String.valueOf(e));
         }
