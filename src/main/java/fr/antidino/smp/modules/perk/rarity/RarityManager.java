@@ -2,6 +2,7 @@ package fr.antidino.smp.modules.perk.rarity;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.modules.perk.AbstractPerk;
+import fr.antidino.smp.modules.perk.PerkEntry;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
