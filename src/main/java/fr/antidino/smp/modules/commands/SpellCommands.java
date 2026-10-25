@@ -22,6 +22,10 @@ public class SpellCommands implements CommandExecutor , TabCompleter {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+        if (!sender.hasPermission("smp.spell")) {
+            sender.sendMessage(messageManager.get("insufficient_permission"));
+            return true;
+        }
         if (!(sender instanceof Player player)){
             sender.sendMessage(messageManager.get("player_only"));
             return true;
@@ -37,7 +41,9 @@ public class SpellCommands implements CommandExecutor , TabCompleter {
             sender.sendMessage(messageManager.get("spell_not_found"));
             return false;
         }
-        spell.canDoSpell(player);
+        if (spell.canDoSpell(player)) {
+            sender.sendMessage(messageManager.get("insufficient_permission"));
+        }
         spell.cast(player);
         spell.PerformCooldown(player);
 

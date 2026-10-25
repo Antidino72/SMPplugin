@@ -1,7 +1,7 @@
 admin_command_usage : "<gray>Usage : <yellow>/perk reload <gray>| <yellow>/perk give <perk|slot_expander> [nombre] [niveau]"
 
 config_reloaded : "<green>Config rechargée : <white> %count% <green>perks, crafts et items de slots mis à jour."
-
+insufficient_permission : "<red>Vous avez pas la permission d'exécuter cette commande   "
 slot_command_usage : "<yellow><b>Usage : </b>/perk slot [argument]"
 player_only : "<red>Seuls les joueurs peuvent exécuter cette commande."
 slot_item_in_hand : "<red>Vous devez avoir un item dans la main !"

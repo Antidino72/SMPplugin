@@ -1,0 +1,11 @@
+name : "Flamme"
+
+permission :
+  name : spells.flame
+  description : "<red>Tire un Boule de feu"
+  default : true
+
+cooldown : 30
+damage :
+  min : 5
+  max : 14

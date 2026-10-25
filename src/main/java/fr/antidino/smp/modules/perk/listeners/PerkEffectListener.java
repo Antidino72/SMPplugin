@@ -129,7 +129,12 @@ public class PerkEffectListener implements Listener {
     }
     @EventHandler
     public void onItemUse(PlayerInteractEvent event) {
+
         Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if(!player.isSneaking() || item.getType() != Material.AIR || !item.isEmpty()) {
+            return;
+        }
         if (plugin.perkManager.hasPerk(PerkTypeId.WARDEN_PERK,player, EquipmentSlot.CHEST)) {
             if (cooldownManager.hasCooldown(player.getUniqueId())) {
                 int remaining = cooldownManager.getRemainingSeconds(player.getUniqueId());
@@ -139,12 +144,10 @@ public class PerkEffectListener implements Listener {
                 player.sendMessage(MiniMessage.miniMessage().deserialize(message));
                 return;
             }
-            ItemStack item = player.getInventory().getItemInMainHand();
-            if(player.isSneaking() && item.getType() == Material.AIR && item.isEmpty()) {
-                WardenPerk.triggerSonicBoom(player);
-                cooldownManager.setCooldown(player.getUniqueId(), plugin.configPerkManager.WardenConfig.getInt("cooldown",5));
-                event.setCancelled(true);
-            }
+            WardenPerk.triggerSonicBoom(player);
+            cooldownManager.setCooldown(player.getUniqueId(), plugin.configPerkManager.WardenConfig.getInt("cooldown",5));
+            event.setCancelled(true);
+
         }
     }
     private boolean isOre(Material material) {

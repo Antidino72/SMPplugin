@@ -2,8 +2,13 @@ package fr.antidino.smp.modules.spell;
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.CooldownManager;
+
+import fr.antidino.smp.core.PermissionsManager;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permission;
+
 import java.util.List;
 
 public abstract class AbstractSpell {
@@ -16,10 +21,10 @@ public abstract class AbstractSpell {
     protected List<String> spellLore;
     protected CooldownManager cooldownManager;
     protected CorePlugin plugin;
+    protected Permission permission;
     protected int cooldown;
 
-    public AbstractSpell(String id ,String spellName, FileConfiguration spellConfig,CorePlugin plugin) {
-        this.spellName = spellName;
+    public AbstractSpell(String id, FileConfiguration spellConfig,CorePlugin plugin) {
         this.id = id;
         this.cooldownManager = new CooldownManager();
         this.spellConfig = spellConfig;
@@ -29,16 +34,20 @@ public abstract class AbstractSpell {
     }
 
 
-    public void loadConfigValues() {
-        if (spellConfig != null && spellConfig.contains("spells." + spellName)) {
-            this.spellDamage = (float) spellConfig.getDouble("spells." + spellName + ".damage", 5.0);
-            this.spellDamageMin = (float) spellConfig.getDouble("spells." + spellName + ".damage-min", 2.0);
-            this.spellDamageMax = (float) spellConfig.getDouble("spells." + spellName + ".damage-max", 10.0);
-            this.spellLore = spellConfig.getStringList("spells." + spellName + ".lore");
-            this.cooldown = spellConfig.getInt("spells." + spellName + ".cooldown");
-        }
+    private void loadConfigValues() {
+        this.permission = PermissionsManager.RegisterPermission(spellConfig);
+        this.spellName = spellConfig.getString("name");
+        this.spellDamageMin = (float) spellConfig.getDouble("damage.min", 2.0);
+        this.spellDamageMax = (float) spellConfig.getDouble("damage.max", 10.0);
+        this.spellLore = spellConfig.getStringList("lore");
+        this.cooldown = spellConfig.getInt("cooldown");
     }
+
+
     public boolean canDoSpell(Player player) {
+        if (player.hasPermission(this.permission)) {
+            return true;
+        }
         return cooldownManager.getRemainingSeconds(player.getUniqueId()) <= 0;
     }
     public void PerformCooldown(Player player) {

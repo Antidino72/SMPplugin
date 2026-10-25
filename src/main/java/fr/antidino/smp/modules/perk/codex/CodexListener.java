@@ -42,6 +42,7 @@ public class CodexListener implements Listener {
                     break;
                 }
                 case CodexMenu.GIVE_SLOT: {
+                    if (!player.hasPermission("smp.perks.codex.give"))return;
                     click(player);
                     ItemStack result = plugin.codexMenu.result;
                     if (result == null || result.getType() == Material.AIR) return;
