@@ -7,15 +7,18 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
 import java.util.List;
 
-public class PlayerJoinListener implements Listener {
+public class PlayerJoinQuitEvent implements Listener {
     CorePlugin plugin;
-    public PlayerJoinListener(CorePlugin plugin) {
+    public PlayerJoinQuitEvent(CorePlugin plugin) {
         this.plugin = plugin;
     }
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+
         List<NamespacedKey> keys = plugin.perkManager.getPerks().stream()
                 .map(AbstractPerk::getKey)
                 .toList();
@@ -23,9 +26,15 @@ public class PlayerJoinListener implements Listener {
             event.getPlayer().discoverRecipes(keys);
         }, 20L);
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+
            if ( !plugin.databaseProvider.hasEntry(event.getPlayer().getUniqueId().toString())){
                plugin.databaseProvider.insertPlayerSQL(event.getPlayer());
            }
+           plugin.playerPerkCache.update(event.getPlayer());
         });
+    }
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        plugin.playerPerkCache.cleanup(event.getPlayer());
     }
 }

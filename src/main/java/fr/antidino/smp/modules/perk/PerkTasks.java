@@ -10,16 +10,13 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Tâche répétée (toutes les 4 ticks) pour les perks "actifs en continu" portés sur l'armure :
@@ -57,13 +54,41 @@ public class PerkTasks {
 
     private void run() {
         tick++;
-        boolean refreshNightVision = tick % 10 == 0;
+        boolean refreshNightVision = (tick % 10 == 0);
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (player.isDead()) continue;
-            Map<String, Integer> levels = plugin.perkManager.getArmorPerkLevels(player);
-            nightVision(player, levels.getOrDefault(PerkTypeId.NIGHT_VISION, 0), refreshNightVision);
-            magnet(player, levels.getOrDefault(PerkTypeId.MAGNET, 0));
-            doubleJump(player, levels.getOrDefault(PerkTypeId.DOUBLE_JUMP, 0));
+
+            var cacheWrapper = plugin.playerPerkCache.getPerksCache(player.getUniqueId());
+            if (cacheWrapper == null) continue;
+
+            Map<EquipmentSlot, List<String>> perkcache = cacheWrapper.get();
+            if (perkcache == null || perkcache.isEmpty()) continue;
+
+
+            boolean hasNightVision = false;
+            boolean hasMagnet = false;
+            boolean hasDoubleJump = false;
+
+
+            for (List<String> entries : perkcache.values()) {
+                if (entries == null) continue;
+
+                if (!hasNightVision && entries.contains(PerkTypeId.NIGHT_VISION)) {
+                    hasNightVision = true;
+                }
+                if (!hasMagnet && entries.contains(PerkTypeId.MAGNET)) {
+                    hasMagnet = true;
+                }
+                if (!hasDoubleJump && entries.contains(PerkTypeId.DOUBLE_JUMP)) {
+                    hasDoubleJump = true;
+                }
+            }
+
+
+            nightVision(player, hasNightVision ? 1 : 0, refreshNightVision);
+            magnet(player, hasMagnet ? 3 : 0);
+            doubleJump(player, hasDoubleJump ? 1 : 0);
         }
     }
 
@@ -72,7 +97,6 @@ public class PerkTasks {
     private void nightVision(Player player, int level, boolean refresh) {
         UUID id = player.getUniqueId();
         if (level > 0) {
-            // 25s de durée, renouvelée toutes les 2s : jamais de clignotement
             if (refresh || !nightVision.contains(id)) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 500, 0, true, false, false));
                 nightVision.add(id);
@@ -95,12 +119,12 @@ public class PerkTasks {
         for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
             if (!(entity instanceof Item item)) continue;
             if (item.getPickupDelay() > 0) continue;
-            // ne ramène pas les items que le joueur vient de jeter lui-même
+
             UUID thrower = item.getThrower();
             if (thrower != null && thrower.equals(player.getUniqueId())) continue;
 
             Vector direction = target.clone().subtract(item.getLocation().toVector());
-            if (direction.lengthSquared() < 0.64) continue; // le ramassage vanilla prend le relais
+            if (direction.lengthSquared() < 0.64) continue;
             item.setVelocity(direction.normalize().multiply(speed));
         }
     }
