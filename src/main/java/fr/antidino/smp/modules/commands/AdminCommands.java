@@ -51,6 +51,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
                 send(sender, messageManager.get("config_reloaded",vars));
             }
             case "give" -> give(sender, args);
+
             default -> send(sender, messageManager.get("admin_command_usage"));
         }
         return true;

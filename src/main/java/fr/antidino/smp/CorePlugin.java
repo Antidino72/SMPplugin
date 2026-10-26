@@ -2,6 +2,7 @@ package fr.antidino.smp;
 
 import fr.antidino.smp.modules.listeners.*;
 import fr.antidino.smp.core.MessageManager;
+import fr.antidino.smp.modules.perk.*;
 import fr.antidino.smp.modules.perk.slotExpander.SlotExpander;
 import fr.antidino.smp.modules.perk.slotExpander.SlotManager;
 import fr.antidino.smp.modules.perk.codex.CodexListener;
@@ -10,12 +11,8 @@ import fr.antidino.smp.modules.commands.AdminCommands;
 import fr.antidino.smp.modules.commands.PerksCommand;
 import fr.antidino.smp.core.database.DatabaseManager;
 import fr.antidino.smp.core.database.DatabaseProvider;
-import fr.antidino.smp.modules.perk.SmithingRegisterAllItem;
 import fr.antidino.smp.modules.perk.config.ConfigPerkManager;
-import fr.antidino.smp.modules.perk.AbstractPerk;
 import fr.antidino.smp.modules.perk.listeners.PerkEffectListener;
-import fr.antidino.smp.modules.perk.PerkManager;
-import fr.antidino.smp.modules.perk.PerkTasks;
 import fr.antidino.smp.modules.perk.rarity.RarityManager;
 import fr.antidino.smp.core.Utils.PDCBuilder;
 import org.bukkit.Bukkit;
@@ -36,20 +33,26 @@ public final class CorePlugin extends JavaPlugin {
     public PerkTasks perkTasks;
     public SlotExpander slotExpander;
     public RarityManager rarityManager;
+    public PlayerPerkCache playerPerkCache;
 
     private DatabaseManager databaseManager;
     public DatabaseProvider databaseProvider;
     @Override
     public void onEnable() {
+
+
+
         configPerkManager = new ConfigPerkManager(this);
         initConfig();
         messageManager = new MessageManager(this);
+        playerPerkCache = new PlayerPerkCache(this);
 
         getServer().getPluginManager().registerEvents(new CraftingListener(this), this);
         getServer().getPluginManager().registerEvents(new SmithingListener(this), this);
         getServer().getPluginManager().registerEvents(new ItemBreakListener(this), this);
-        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerJoinQuitEvent(this), this);
         getServer().getPluginManager().registerEvents(new SavingPerkListeners(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerChangeArmorListener(this), this);
 
         rarityManager = new RarityManager(this);
         pdcBuilder = new PDCBuilder(this);

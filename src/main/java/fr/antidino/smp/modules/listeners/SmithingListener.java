@@ -38,6 +38,7 @@ public class SmithingListener implements Listener {
         String perk_id = pdc.get(PDCBuilder.PERK_ID, PersistentDataType.STRING);
         AbstractPerk perk = plugin.perkManager.getPerk(perk_id);
         if (perk == null) return;
+        if (!plugin.rarityManager.canApply((org.bukkit.entity.Player) event.getView().getPlayer(), equip, perk)) return;
         int level = Math.min(plugin.pdcBuilder.getPerkLevel(mineral), perk.getMaxLevel());
         apply_perk(event,equip,perk_id,level);
 

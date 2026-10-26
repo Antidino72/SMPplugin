@@ -40,6 +40,7 @@ public class SavingPerkListeners implements Listener {
     @EventHandler
     public void onEntityRemove(EntityRemoveFromWorldEvent event) {
         if (!(event.getEntity() instanceof Item item)) return;
+        if (item.getLocation().getY() > 0) return;
         if (!isAPerkItem(item.getItemStack()))return;
         if (item.getLocation().getBlockY()>0) return;
         Location loc = item.getLocation();
