@@ -145,4 +145,7 @@ public class PerkManager {
         }
         return levels;
     }
+    public List<String> listPerks(){
+        return new ArrayList<>(registeredPerks.keySet());
+    }
 }

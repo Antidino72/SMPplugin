@@ -44,7 +44,7 @@ public class CraftingListener implements Listener {
         String id = plugin.perkManager.getPerkId(resultType);
         UUID playerId = player.getUniqueId();
         if (id == null) return;
-        int number_of_perk = plugin.databaseProvider.NumberOfPerkCrafted(id);
+        int number_of_perk = plugin.dataCache.getPerkCraftCount(id);
         AbstractPerk perk = plugin.perkManager.getPerk(id);
         if (perk.getMaxPossibleCraft() <= number_of_perk && perk.getMaxPossibleCraft() != -1) {
             event.setCancelled(true);
@@ -59,8 +59,7 @@ public class CraftingListener implements Listener {
            }
            cooldownManager.setCooldown(playerId,0.3);
             Bukkit.getScheduler().runTaskAsynchronously(plugin,()->{
-                plugin.rarityManager.onCraft(player, perk, plugin.pdcBuilder.getPerkLevel(resultType));
-                    plugin.databaseProvider.InsertPerkCraftSQL(id,playerId.toString());
+                plugin.dataCache.addPerkCraftCount(id);
             });
         }
 
