@@ -1,4 +1,4 @@
-package fr.antidino.smp.modules.perk;
+package fr.antidino.smp.modules.perk.cache;
 
 
 import org.bukkit.inventory.EquipmentSlot;

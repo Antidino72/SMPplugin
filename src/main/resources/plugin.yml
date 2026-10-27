@@ -1,9 +1,12 @@
 name: SMPplugin
 version: '${version}'
-
+author: "Antidino72"
 main: fr.antidino.smp.CorePlugin
 api-version: '26.3'
 load: STARTUP
+softdepend: [
+    "PlaceholderAPI",
+]
 commands :
   perk:
     permission : smp.admin.perk

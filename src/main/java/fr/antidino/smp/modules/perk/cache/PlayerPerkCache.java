@@ -1,11 +1,10 @@
-package fr.antidino.smp.modules.perk;
+package fr.antidino.smp.modules.perk.cache;
 
 
 import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.core.Utils.PDCBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.slf4j.Logger;

@@ -63,7 +63,7 @@ public class DatabaseProvider {
         }
     }
 
-    public int NumberOfPerkCrafted(String perk_id){
+    public int getNumberOfCraft(String perk_id){
         try (Connection connection = plugin.getConnexion()){
             PreparedStatement ps = connection.prepareStatement(GET_PERK_CRAFT_SQL);
             ps.setString(1, perk_id);

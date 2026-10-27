@@ -3,6 +3,9 @@ package fr.antidino.smp;
 import fr.antidino.smp.modules.listeners.*;
 import fr.antidino.smp.core.MessageManager;
 import fr.antidino.smp.modules.perk.*;
+import fr.antidino.smp.modules.perk.cache.DataCache;
+import fr.antidino.smp.modules.perk.cache.PlayerPerkCache;
+import fr.antidino.smp.modules.perk.papi.PapiExpansion;
 import fr.antidino.smp.modules.perk.slotExpander.SlotExpander;
 import fr.antidino.smp.modules.perk.slotExpander.SlotManager;
 import fr.antidino.smp.modules.perk.codex.CodexListener;
@@ -19,11 +22,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
 public final class CorePlugin extends JavaPlugin {
+    private static final Logger log = LoggerFactory.getLogger(CorePlugin.class);
     public PDCBuilder pdcBuilder;
     public PerkManager perkManager;
     public SlotManager slotManager;
@@ -37,11 +44,19 @@ public final class CorePlugin extends JavaPlugin {
 
     private DatabaseManager databaseManager;
     public DatabaseProvider databaseProvider;
+    public DataCache dataCache;
     @Override
     public void onEnable() {
+           try {
+                new PapiExpansion(this).register();
+           }catch (Exception e){
+               log.info("PAPI Expansion Error");
+           }
 
 
 
+        dataCache = new DataCache(this);
+        dataCache.load();
         configPerkManager = new ConfigPerkManager(this);
         initConfig();
         messageManager = new MessageManager(this);
@@ -105,7 +120,10 @@ public final class CorePlugin extends JavaPlugin {
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.discoverRecipes(keys);
         }
+        dataCache.unload();
+        dataCache.load();
         return perkManager.getPerks().size();
+
     }
 
     @Override
