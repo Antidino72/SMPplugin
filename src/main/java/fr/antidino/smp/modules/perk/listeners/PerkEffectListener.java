@@ -52,14 +52,14 @@ public class PerkEffectListener implements Listener {
     @EventHandler
     public void onToggleFlight(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();
-        if (!plugin.perkTasks.isManaged(player.getUniqueId())) return;
+        if (!plugin.perkTasks.servicesManager.doubleJumpService.isManaged(player.getUniqueId())) return;
         if (!event.isFlying()) return;
 
         // Le vol n'est jamais réellement activé : on transforme le double-tap en saut
         event.setCancelled(true);
         player.setFlying(false);
         if (player.isOnGround()) return;
-        plugin.perkTasks.performDoubleJump(player);
+        plugin.perkTasks.servicesManager.doubleJumpService.performDoubleJump(player);
     }
 
     @EventHandler
@@ -74,12 +74,11 @@ public class PerkEffectListener implements Listener {
         if (!(event.getDamager() instanceof Player player)) return;
         if (!(event.getEntity() instanceof LivingEntity target) || target instanceof ArmorStand) return;
 
-        int level = plugin.perkManager.getPerkLevel(player, EquipmentSlot.HAND, PerkTypeId.LIFESTEAL_PERK);
-        if (level <= 0) return;
+        if (!plugin.perkManager.playerPerkCache.getPerksCache(player.getUniqueId()).hasPerk(EquipmentSlot.HAND, PerkTypeId.LIFESTEAL_PERK)) return;
         AbstractPerk perk = plugin.perkManager.getPerk(PerkTypeId.LIFESTEAL_PERK);
         if (perk == null) return;
 
-        double percent = perk.getValue("heal_percent", level, 0.10 * level);
+        double percent = perk.getValue("heal_percent", 1, 0.10 * 1);
         double heal = event.getFinalDamage() * percent;
         if (heal <= 0) return;
 
@@ -95,7 +94,7 @@ public class PerkEffectListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onBlockDrop(BlockDropItemEvent event) {
         Player player = event.getPlayer();
-        if (plugin.perkManager.getPerkLevel(player, EquipmentSlot.HAND, PerkTypeId.SMELTER) <= 0) return;
+        if (plugin.perkManager.playerPerkCache.getPerksCache(player.getUniqueId()).hasPerk(EquipmentSlot.HAND, PerkTypeId.SMELTER)) return;
         if (!isOre(event.getBlockState().getType())) return;
 
         boolean smelted = false;
@@ -133,7 +132,7 @@ public class PerkEffectListener implements Listener {
         if (plugin.perkManager.hasPerk(PerkTypeId.WARDEN_PERK,player, EquipmentSlot.CHEST)) {
             if (cooldownManager.hasCooldown(player.getUniqueId())) {
                 int remaining = cooldownManager.getRemainingSeconds(player.getUniqueId());
-                String message = plugin.configPerkManager.WardenConfig.getString("cooldown-message",
+                String message = plugin.perkManager.configPerkManager.WardenConfig.getString("cooldown-message",
                                 "Tu dois attendre encore %time%s avant de réutiliser cette capacité !")
                         .replace("%time%", String.valueOf(remaining));
                 player.sendMessage(MiniMessage.miniMessage().deserialize(message));
@@ -142,7 +141,7 @@ public class PerkEffectListener implements Listener {
             ItemStack item = player.getInventory().getItemInMainHand();
             if(player.isSneaking() && item.getType() == Material.AIR && item.isEmpty()) {
                 WardenPerk.triggerSonicBoom(player);
-                cooldownManager.setCooldown(player.getUniqueId(), plugin.configPerkManager.WardenConfig.getInt("cooldown",5));
+                cooldownManager.setCooldown(player.getUniqueId(), plugin.perkManager.configPerkManager.WardenConfig.getInt("cooldown",5));
                 event.setCancelled(true);
             }
         }

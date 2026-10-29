@@ -68,7 +68,7 @@ public class CodexListener implements Listener {
                 }
             }
             case CodexMenu.EXPANDER_SLOT: {
-                if ( plugin.slotExpander != null){
+                if ( plugin.perkManager.getSlotExpander() != null){
                     click(player);
                     plugin.codexMenu.openExpanderDetail(player, holder.page);
                     return;

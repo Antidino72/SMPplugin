@@ -12,12 +12,14 @@ public class PerksCache {
     public Map<EquipmentSlot,List<String>> get() {
         return perks;
     }
+    public boolean hasPerk(EquipmentSlot slot,String perk_id) {
+        return perks.get(slot).contains(perk_id);
+    }
 
 
     public void set(EquipmentSlot slot, List<String> perks_list) {
         perks.put(slot, perks_list);
     }
-
 
 
 }

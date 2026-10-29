@@ -72,5 +72,6 @@ public class SmithingRegisterAllItem {
         getCategorizedMaterials().values().forEach(allItems::addAll);
         return allItems;
     }
+
 }
 

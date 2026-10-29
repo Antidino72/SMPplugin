@@ -36,7 +36,6 @@ public class PlayerPerkCache {
     public PerksCache getPerksCache(UUID uuid) {
         return cache.get(uuid);
     }
-
     public void update(Player player) {
         PerksCache perksCache = cache.get(player.getUniqueId());
         if (perksCache == null) {
@@ -48,8 +47,11 @@ public class PlayerPerkCache {
             perksCache.set(slot, perks);
         }
         cache.put(player.getUniqueId(), perksCache);
-        log.info("PlayerPerkCache updated");
 
+    }
+    public void updatePlayerHandCache(Player player) {
+        updateSlot(player, EquipmentSlot.HAND);
+        updateSlot(player, EquipmentSlot.OFF_HAND);
     }
     public void updateSlot(Player player, EquipmentSlot slot) {
         PerksCache perksCache = cache.get(player.getUniqueId());

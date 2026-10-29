@@ -150,7 +150,7 @@ public class AdminCommands implements CommandExecutor, TabCompleter {
 
         // Item d'extension de slots
         if (args[1].equalsIgnoreCase(EXPANDER_ID)) {
-            for (int i = 0; i < count; i++) player.getInventory().addItem(plugin.slotExpander.getItem());
+            for (int i = 0; i < count; i++) player.getInventory().addItem(plugin.perkManager.getSlotExpander().getItem());
             return;
         }
 

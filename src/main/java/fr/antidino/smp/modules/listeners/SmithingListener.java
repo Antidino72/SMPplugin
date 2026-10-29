@@ -50,8 +50,8 @@ public class SmithingListener implements Listener {
         event.setResult(resultItem);
     }
     private void applyExpander(PrepareSmithingEvent event, ItemStack equip) {
-        if (plugin.slotExpander == null || !plugin.slotExpander.isSupported(equip.getType())) return;
-        ItemStack result = plugin.slotManager.expandSlots(equip, plugin.slotExpander.getAdded(), plugin.slotExpander.getMax());
+        if (plugin.perkManager.getSlotExpander() == null || !plugin.perkManager.getSlotExpander().isSupported(equip.getType())) return;
+        ItemStack result = plugin.slotManager.expandSlots(equip, plugin.perkManager.getSlotExpander().getAdded(), plugin.perkManager.getSlotExpander().getMax());
         if (result == null) return; // déjà au maximum de slots
         event.setResult(result);
     }

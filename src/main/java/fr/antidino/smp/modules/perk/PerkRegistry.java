@@ -4,36 +4,30 @@ import fr.antidino.smp.CorePlugin;
 import fr.antidino.smp.modules.perk.config.ConfigPerkManager;
 import fr.antidino.smp.modules.perk.config.PerkTypeId;
 import fr.antidino.smp.modules.perk.type.*;
-import fr.antidino.smp.core.Utils.PDCBuilder;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.persistence.PersistentDataType;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PerkManager {
+public class PerkRegistry {
     private static final EquipmentSlot[] ARMOR_SLOTS = {
             EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET
     };
-    private final Map<String, AbstractPerk> registeredPerks = new HashMap<>();
+    public Map<String, AbstractPerk> registeredPerks = new HashMap<>();
     private final CorePlugin plugin;
+    private final PerkManager perkManager;
 
-
-    public PerkManager(CorePlugin plugin) {
+    public PerkRegistry(CorePlugin plugin,PerkManager perkManager) {
         this.plugin = plugin;
+        this.perkManager = perkManager;
         registerDefaults();
-        ConfigPerkManager configPerkManager = plugin.configPerkManager;
+
     }
 
     private void registerDefaults() {
 
-        ConfigPerkManager configPerkManager = plugin.configPerkManager;
+        ConfigPerkManager configPerkManager = perkManager.configPerkManager;
 
         registerPerk(new NoFallPerk(PerkTypeId.NO_FALL_PERK,plugin,configPerkManager.NoFallConfig));
         registerPerk(new WardenPerk(PerkTypeId.WARDEN_PERK,plugin,configPerkManager.WardenConfig));
@@ -68,57 +62,7 @@ public class PerkManager {
         registeredPerks.put(perk.getId(), perk);
     }
 
-    public String getPerkId(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) {
-            return null;
-        }
-        ItemMeta meta = item.getItemMeta();
-        NamespacedKey key = PDCBuilder.PERK_ID;
-        if (meta.getPersistentDataContainer().has(key, PersistentDataType.STRING)) {
-            return meta.getPersistentDataContainer().get(key, PersistentDataType.STRING);
-        }
-        return null;
-    }
 
-    public AbstractPerk getPerk(String id) {
-        return registeredPerks.get(id);
-    }
-    public ArrayList<AbstractPerk> getPerks() {
-        return new ArrayList<>(registeredPerks.values());
-    }
-    public boolean hasPerk(String id,Player player,EquipmentSlot slot) {
-        ArrayList<AbstractPerk> perks = getEquippedPerk(player,slot);
-        if (perks == null) return false;
-        return perks.contains(getPerk(id));
-    }
-
-    private ItemStack getItemInSlot(Player player, EquipmentSlot slot) {
-        return switch (slot) {
-            case LEGS -> player.getInventory().getLeggings();
-            case FEET -> player.getInventory().getBoots();
-            case HEAD -> player.getInventory().getHelmet();
-            case CHEST -> player.getInventory().getChestplate();
-            case OFF_HAND -> player.getInventory().getItemInOffHand();
-            case HAND -> player.getInventory().getItemInMainHand();
-            default -> null;
-        };
-    }
-
-    private List<String> readEntries(ItemStack item) {
-        if (item == null || !item.hasItemMeta()) return null;
-        return item.getItemMeta().getPersistentDataContainer().get(PDCBuilder.SLOTS, PersistentDataType.LIST.strings());
-    }
-
-    public ArrayList<AbstractPerk> getEquippedPerk(Player player, EquipmentSlot slot) {
-        List<String> entries = readEntries(getItemInSlot(player, slot));
-        if (entries == null) return null;
-        ArrayList<AbstractPerk> perks = new ArrayList<>();
-        for (String raw : entries) {
-            AbstractPerk perk = registeredPerks.get(PerkEntry.parse(raw).id());
-            if (perk != null) perks.add(perk);
-        }
-        return perks;
-    }
 
 
 

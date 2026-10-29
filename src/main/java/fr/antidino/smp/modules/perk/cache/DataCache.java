@@ -1,10 +1,12 @@
 package fr.antidino.smp.modules.perk.cache;
 
 import fr.antidino.smp.CorePlugin;
+import fr.antidino.smp.modules.perk.AbstractPerk;
 import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,16 +19,17 @@ public class DataCache {
     }
     public void load() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            for (String id : plugin.perkManager.listPerks()){
-                int numberOfCraft = plugin.databaseProvider.getNumberOfCraft(id);
-                perk_craft_count.put(id, numberOfCraft);
-            }
+            ArrayList<AbstractPerk> perks = plugin.perkManager.getPerks();
+            perks.stream().forEach(perk -> {
+                int numberOfCraft = plugin.databaseProvider.getNumberOfCraft(perk.getId());
+                perk_craft_count.put(perk.getId(), numberOfCraft);
+            });
             log.info("Loaded {} perks", perk_craft_count.size());
         });
     }
     public void unload() {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            for (String id : plugin.perkManager.listPerks()){
+            for (String id : plugin.perkManager.getPerkNames()){
                 perk_craft_count.remove(id);
             }
         });
