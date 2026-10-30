@@ -1,7 +1,7 @@
 id : "sprinter"
 item:
-  material : "SUGAR"
-  display_name : "<green>Sprinter"
+  material : "REDSTONE"
+  display_name : "<reg>HEALTH BOOST"
 craft :
   number : -1
   shape :
@@ -18,12 +18,24 @@ level:
 
 
 modifiers:
-  health:
+  health-head:
     attribute: "MAX_HEALTH"
     amount: 2.0
     amount_per_level: 1.0
     operation: "ADD_NUMBER"
     slot_group: "HEAD"
+  health-body:
+    attribute: "MAX_HEALTH"
+    amount: 2.0
+    amount_per_level: 1.0
+    operation: "ADD_NUMBER"
+    slot_group: "CHEST"
+  health-leg:
+    attribute: "MAX_HEALTH"
+    amount: 2.0
+    amount_per_level: 1.0
+    operation: "ADD_NUMBER"
+    slot_group: "LEGS"
 
 description:
   - "<gray>Augmente votre <red>vie maximale</red>"
