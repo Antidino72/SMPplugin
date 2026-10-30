@@ -88,29 +88,30 @@ public class PDCBuilder {
         }
 
         return  new ArrayList<>(perksArray);
+
     }
+
     public ItemStack addPerkToItem(ItemStack item, String perkId) {
         if (item == null || !item.hasItemMeta()) return item;
 
-        ItemMeta meta = item.getItemMeta();
-        PersistentDataContainer pdc = meta.getPersistentDataContainer();
+        item = plugin.perkManager.getPerk(perkId).onApply(item);
 
 
         List<String> perks = getAppliedPerks(item);
 
+        ItemMeta meta = item.getItemMeta();
+        PersistentDataContainer pdc = meta.getPersistentDataContainer();
 
         perks.add(perkId);
-
         pdc.set(SLOTS, PersistentDataType.LIST.strings(), perks);
 
         pdc.set(USED_SLOTS, PersistentDataType.INTEGER, perks.size());
-
         item.setItemMeta(meta);
-
-
-        return updateItemLore(item);
+        item = updateItemLore(item);
+        return item;
     }
     public ItemStack updateItemLore(ItemStack item) {
+        log.info(item.toString());
         ItemMeta meta = item.getItemMeta();
         if (meta == null) {
             plugin.getLogger().warning("[SMPplugin] Item is null");
