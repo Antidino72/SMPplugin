@@ -36,33 +36,35 @@ public class CraftingListener implements Listener {
     public void onCraftingEvent(CraftItemEvent event) {
         ItemStack resultType = event.getInventory().getResult();
 
+
         if (!(event.getWhoClicked() instanceof Player player)) return;
-
-
         if (resultType == null || !resultType.hasItemMeta()) return;
 
+
+
+        /* craft de perk */
         String id = plugin.perkManager.getPerkId(resultType);
         UUID playerId = player.getUniqueId();
-        if (id == null) return;
-        int number_of_perk = plugin.dataCache.getPerkCraftCount(id);
-        AbstractPerk perk = plugin.perkManager.getPerk(id);
-        if (perk.getMaxPossibleCraft() <= number_of_perk && perk.getMaxPossibleCraft() != -1) {
-            event.setCancelled(true);
-            player.sendMessage(mm.deserialize("<red> You can't craft this item!"));
+        if (id != null) {
+            int number_of_perk = plugin.dataCache.getPerkCraftCount(id);
+            AbstractPerk perk = plugin.perkManager.getPerk(id);
+            if (perk.getMaxPossibleCraft() <= number_of_perk && perk.getMaxPossibleCraft() != -1) {
+                event.setCancelled(true);
+                player.sendMessage(mm.deserialize("<red> You can't craft this item!"));
+            }
+            // On compte le nombre de perk
+            if (!event.isCancelled()) {
+                if (cooldownManager.hasCooldown(playerId)) {
+                    event.setCancelled(true);
+                    player.sendMessage(mm.deserialize("<red>Please wait before crafting this item again!"));
+                    return;
+                }
+                cooldownManager.setCooldown(playerId,0.3);
+                Bukkit.getScheduler().runTaskAsynchronously(plugin,()->{
+                    plugin.dataCache.addPerkCraftCount(id);
+                });
+            }
         }
-        
-        if (!event.isCancelled()) {
-           if (cooldownManager.hasCooldown(playerId)) {
-               event.setCancelled(true);
-               player.sendMessage(mm.deserialize("<red>Please wait before crafting this item again!"));
-               return;
-           }
-           cooldownManager.setCooldown(playerId,0.3);
-            Bukkit.getScheduler().runTaskAsynchronously(plugin,()->{
-                plugin.dataCache.addPerkCraftCount(id);
-            });
-        }
-
 
         for (Material material : SmithingRegisterAllItem.getAllMaterials()) {
             if (material == resultType.getType()) {

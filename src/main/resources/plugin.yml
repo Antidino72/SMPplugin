@@ -4,7 +4,7 @@ author: "Antidino72"
 main: fr.antidino.smp.CorePlugin
 api-version: '26.3'
 load: STARTUP
-softdepend: [
+depend: [
     "PlaceholderAPI",
 ]
 commands :

@@ -22,7 +22,7 @@ Le projet a une bonne base structurale, mais plusieurs zones critiques sont enco
 - `PerkTasks` exécute trop de travail dans une boucle tick-based.
 - Le plugin recalcul souvent les niveaux/perks à partir des items PDC.
 - Les spells deviennent vite monolithiques et contiennent trop de logique métier dans une même classe.
-- Les classes de gestion globale (ex. `CorePlugin`, `PerkManager`, `AbstractPerk`) portent trop de responsabilités.
+- Les classes de gestion globale (ex. `CorePlugin`, `PerkRegistry`, `AbstractPerk`) portent trop de responsabilités.
 - Le design est encore orienté "prototype / MVP" plutôt que "système extensible et optimisé".
 
 ---
@@ -162,7 +162,7 @@ Il faut :
   - `MagnetService`
   - `DoubleJumpService`
 - Déplacer la logique de compétence hors des classes de gestion globales.
-- Rendre `PerkManager` plus "registry" et moins "traitement de tout".
+- Rendre `PerkRegistry` plus "registry" et moins "traitement de tout".
 - Faire de `AbstractPerk` une abstraction plus légère.
 
 ### Livrables
@@ -264,7 +264,7 @@ Priorité absolue.
 ### Priorité 1 : performance
 
 1. `PerkTasks`
-2. `PerkManager`
+2. `PerkRegistry`
 3. invalidation de cache
 
 ### Priorité 2 : architecture
@@ -326,7 +326,7 @@ Le code actuel est correct pour un plugin fonctionnel, mais pas encore pour un s
 Le meilleur retour sur investissement est de corriger en priorité :
 
 - `PerkTasks`
-- `PerkManager`
+- `PerkRegistry`
 - le cache des données liées aux perks
 - la séparation des services de spell / cooldown / effects
 

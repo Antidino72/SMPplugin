@@ -58,7 +58,6 @@ public class PDCBuilder {
         pdc.set(USED_SLOTS, PersistentDataType.INTEGER, 0);
         item.setItemMeta(meta);
         item  = updateItemLore(item);
-        log.info(item.toString());
         return item;
     }
 

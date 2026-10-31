@@ -30,11 +30,11 @@ public class PlayerJoinQuitEvent implements Listener {
            if ( !plugin.databaseProvider.hasEntry(event.getPlayer().getUniqueId().toString())){
                plugin.databaseProvider.insertPlayerSQL(event.getPlayer());
            }
-           plugin.playerPerkCache.update(event.getPlayer());
+           plugin.perkManager.playerPerkCache.update(event.getPlayer());
         });
     }
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        plugin.playerPerkCache.cleanup(event.getPlayer());
+        plugin.perkManager.playerPerkCache.cleanup(event.getPlayer());
     }
 }

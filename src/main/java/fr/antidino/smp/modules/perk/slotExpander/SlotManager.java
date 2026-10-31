@@ -9,17 +9,19 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import fr.antidino.smp.modules.perk.PerkEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
 
 public class SlotManager {
+    private static final Logger log = LoggerFactory.getLogger(SlotManager.class);
     CorePlugin plugin;
     public  SlotManager(CorePlugin plugin) {
         this.plugin = plugin;
     }
     public ItemStack initializeSlots(ItemStack item){
-
         if(item == null) {
             return null;
         }

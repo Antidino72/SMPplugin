@@ -111,7 +111,7 @@ public class CodexMenu {
         for (int s = 45; s < 54; s++) inv.setItem(s, filler);
         if (page > 0) inv.setItem(PREV_SLOT, button(Material.ARROW, "<yellow>← Page précédente"));
         if (page < maxPage) inv.setItem(NEXT_SLOT, button(Material.ARROW, "<yellow>Page suivante →"));
-        if (plugin.slotExpander != null) inv.setItem(EXPANDER_SLOT, expanderListItem());
+        if (plugin.perkManager.getSlotExpander() != null) inv.setItem(EXPANDER_SLOT, expanderListItem());
         inv.setItem(CLOSE_SLOT, button(Material.BARRIER, "<red>Fermer"));
 
         player.openInventory(inv);
@@ -139,13 +139,13 @@ public class CodexMenu {
     }
 
     private ItemStack expanderListItem() {
-        ItemStack item = plugin.slotExpander.getItem();
+        ItemStack item = plugin.perkManager.getSlotExpander().getItem();
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item;
 
         List<Component> lore = new ArrayList<>();
         lore.add(Component.empty());
-        lore.addAll(descriptionLines(plugin.slotExpander.getDescription()));
+        lore.addAll(descriptionLines(plugin.perkManager.getSlotExpander().getDescription()));
         lore.add(Component.empty());
         lore.add(mm("<yellow>▶ Clic pour voir le craft"));
         meta.lore(lore);
@@ -176,16 +176,16 @@ public class CodexMenu {
     }
 
     public void openExpanderDetail(Player player, int fromPage) {
-        if (plugin.slotExpander == null) return;
-        List<Component> description = new ArrayList<>(descriptionLines(plugin.slotExpander.getDescription()));
+        if (plugin.perkManager.getSlotExpander() == null) return;
+        List<Component> description = new ArrayList<>(descriptionLines(plugin.perkManager.getSlotExpander().getDescription()));
         description.add(Component.empty());
         description.add(mm("<gray>Utilisation : <white>table de forge"));
-        description.add(mm("<gray>Ajoute <white>+" + plugin.slotExpander.getAdded() + " <gray>emplacement(s)"));
-        description.add(mm("<gray>Maximum : <white>" + plugin.slotExpander.getMax() + " <gray>par équipement"));
+        description.add(mm("<gray>Ajoute <white>+" + plugin.perkManager.getSlotExpander().getAdded() + " <gray>emplacement(s)"));
+        description.add(mm("<gray>Maximum : <white>" + plugin.perkManager.getSlotExpander().getMax() + " <gray>par équipement"));
         openRecipeView(player, EXPANDER_ID, fromPage,
-                mm("<dark_gray>Craft : ").append(mm(plugin.slotExpander.getDisplayName())),
-                plugin.slotExpander.getItem(), plugin.slotExpander.getCraftShape(),
-                plugin.slotExpander.getCraftIngredients(), description);
+                mm("<dark_gray>Craft : ").append(mm(plugin.perkManager.getSlotExpander().getDisplayName())),
+                plugin.perkManager.getSlotExpander().getItem(), plugin.perkManager.getSlotExpander().getCraftShape(),
+                plugin.perkManager.getSlotExpander().getCraftIngredients(), description);
     }
 
     private void openRecipeView(Player player, String id, int fromPage, Component title, ItemStack result,
